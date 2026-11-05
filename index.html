@@ -223,6 +223,14 @@ summary{padding:11px 12px;cursor:pointer;font-family:var(--display);font-weight:
 .bn.r{background:#C8201B}.bn.b{background:#3B4FE0}
 .panel .tools{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .panel .sd.live{background:var(--brand);color:#fff;border-color:var(--brand);padding:6px 12px;font-size:.9rem}
+.panel:not([hidden]){position:fixed;inset:0;z-index:30;display:block;padding:0;border-radius:0;overflow:auto;background:var(--ground);-webkit-overflow-scrolling:touch}
+body.ovopen{overflow:hidden}
+.ovh{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--navy);padding:calc(env(safe-area-inset-top,0px) + 8px) max(12px,env(safe-area-inset-right,0px)) 8px max(12px,env(safe-area-inset-left,0px))}
+.ovh .pl{color:#CFE0EE;font-size:.82rem;font-family:var(--mono)}
+.ovh .zoom{border:1px solid #3B5674;background:none;color:#fff;border-radius:5px;padding:5px 10px;font-size:.8rem;font-weight:600;cursor:pointer}
+.ovh .x{margin-left:auto;border:0;background:none;color:#fff;font-size:1.9rem;line-height:1;padding:0 4px 2px;cursor:pointer}
+.ovb{display:grid;gap:12px;padding:12px max(12px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 24px) max(12px,env(safe-area-inset-left,0px))}
+.ovb .pl{font-size:.8rem;color:var(--ink-2);font-family:var(--mono)}
 .blk.sel{outline:3px solid var(--brand);outline-offset:0;z-index:2}
 .nowline{position:absolute;left:var(--tc);right:0;height:0;border-top:2px solid #FF6A5E;z-index:3;pointer-events:none}
 .belt.red{background:#C62828}
@@ -361,7 +369,6 @@ function renderHall(){
     el.onclick = () => {
       S.ring = S.ring===r || !bi ? null : r;
       render();
-      if (S.ring) $('panel').scrollIntoView({behavior:'smooth', block:'start'});
     };
     hall.appendChild(el);
   }
@@ -376,17 +383,33 @@ function sheetsFor(b){
 function renderPanel(){
   const p = $('panel');
   const b = S.view === 'day' ? S.dsel : (S.ring ? current(S.day, S.ring, S.t) : null); // hall and hall2 share the ring choice
-  if (!b || !b.cat){ p.hidden = true; return; }
+  if (!b || !b.cat){ if (!p.hidden) closeOverlay(p); return; }
   const i = info(b.t), sh = sheetsFor(b);
-  p.hidden = false;
+  if (p.hidden) openOverlay(p);
   // technique events (special technique, breaking) are scored, so Sportdata shows them on a points page
   const act = i.k === 'st' || i.k === 'kn' ? 'auslosungcatpunkte' : 'auslosungcat_check';
   const draw = `https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=${act}&catid=${b.cat}&verid=${b.lm ? 1123 : 1122}`;
   const link = `<a class="sd live" href="${draw}" target="_blank" rel="noopener">Live på Sportdata ↗</a>`;
-  p.innerHTML = `${sh.length ? sh.map((s, k) => `<div class="sheet${S.fit?' fit':''}"><div class="tools">${k === 0 ? link : '<span></span>'}<span>${s.pool!=='1/1'?'Pulje '+s.pool.replace('/',' av '):''}</span><button type="button" class="zoom">${S.fit?'Zoom inn':'Hele arket'}</button></div><div class="sc"><img src="${s.f}" alt="Trekningsark" width="${s.w}" height="${s.h}" loading="lazy"></div></div>`).join('') : `<div class="tools">${link}</div>`}
-    ${sh.length && has(b) ? '<div class="agekey"><span><i class="r"></i>siste juniorår</span><span><i class="y"></i>ett år til</span><span><i class="g"></i>to år til</span><span><i class="o"></i>blir senior</span><span><i class="s"></i>senior</span></div>' : ''}`;
+  const pool = sh.length === 1 && sh[0].pool !== '1/1' ? `<span class="pl">Pulje ${sh[0].pool.replace('/',' av ')}</span>` : '<span></span>';
+  p.innerHTML = `<div class="ovh">${link}${pool}${sh.length ? `<button type="button" class="zoom">${S.fit?'Zoom inn':'Hele arket'}</button>` : ''}<button type="button" class="x" aria-label="Tilbake til oversikten">×</button></div>
+    <div class="ovb">${sh.length ? sh.map(s => `<div class="sheet${S.fit?' fit':''}">${sh.length > 1 ? `<div class="tools"><span class="pl">Pulje ${s.pool.replace('/',' av ')}</span></div>` : ''}<div class="sc"><img src="${s.f}" alt="Trekningsark" width="${s.w}" height="${s.h}"></div></div>`).join('') : '<p class="hint">Ingen trekningsark for denne klassen. Bruk Sportdata-knappen.</p>'}
+    ${sh.length && has(b) ? '<div class="agekey"><span><i class="r"></i>siste juniorår</span><span><i class="y"></i>ett år til</span><span><i class="g"></i>to år til</span><span><i class="o"></i>blir senior</span><span><i class="s"></i>senior</span></div>' : ''}</div>`;
   p.querySelectorAll('.zoom').forEach(z => z.onclick = () => { S.fit = !S.fit; store.set('fit', S.fit); renderPanel(); });
+  p.querySelector('.x').onclick = () => { if (history.state && history.state.nm26ov) history.back(); else closeSel(); };
 }
+// the sheet opens over the overview so the overview keeps its scroll position on a phone
+function closeSel(){ if (S.view === 'day') S.dsel = null; else S.ring = null; render(); }
+function openOverlay(p){
+  p.hidden = false; document.body.classList.add('ovopen');
+  // an extra history entry lets the phone's back button close the sheet instead of leaving the page
+  try { history.pushState({nm26ov: 1}, ''); } catch (e) {}
+}
+function closeOverlay(p){
+  p.hidden = true; document.body.classList.remove('ovopen');
+  try { if (history.state && history.state.nm26ov) history.back(); } catch (e) {}
+}
+addEventListener('popstate', () => { if (!$('panel').hidden) { $('panel').hidden = true; document.body.classList.remove('ovopen'); closeSel(); } });
+addEventListener('keydown', e => { if (e.key === 'Escape' && !$('panel').hidden) closeSel(); });
 
 const DAY0 = 510, PPM = 2.4; // minutes from 08:30, pixels per minute
 // first name and surname initial keep a column narrow enough for eight rings on a phone
@@ -420,7 +443,6 @@ function renderDay(){
     if (b === S.dsel) e.classList.add('sel');
     e.onclick = () => {
       S.dsel = S.dsel === b ? null : b; renderDay(); renderPanel();
-      if (S.dsel) $('panel').scrollIntoView({behavior:'smooth', block:'start'});
     };
   });
 }
@@ -452,5 +474,5 @@ if (eventDay()){ $('now').hidden = false; $('now').onclick = goNow; goNow(); }
 render();
 </script>
 
-<script id="buildcheck">(function(){var B="3848785c01";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
+<script id="buildcheck">(function(){var B="16ba565aaa";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
 </html>
