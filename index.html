@@ -375,19 +375,14 @@ function renderPanel(){
   const p = $('panel');
   const b = S.view === 'day' ? S.dsel : (S.ring ? current(S.day, S.ring, S.t) : null); // hall and hall2 share the ring choice
   if (!b || !b.cat){ p.hidden = true; return; }
-  const r = b.r;
   const i = info(b.t), sh = sheetsFor(b);
   p.hidden = false;
   // technique events (special technique, breaking) are scored, so Sportdata shows them on a points page
   const act = i.k === 'st' || i.k === 'kn' ? 'auslosungcatpunkte' : 'auslosungcat_check';
   const draw = `https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=${act}&catid=${b.cat}&verid=${b.lm ? 1123 : 1122}`;
-  const head = `<span class="tm">${hm(b.s)}–${hm(b.e)}</span><a class="sd" href="${draw}" target="_blank" rel="noopener">Sportdata ↗</a>`;
-  p.innerHTML = `<div class="hd"><span class="rn">Ring ${r}</span>${head}<button type="button" class="x" id="x" aria-label="Lukk">×</button></div>
-    <div class="ttl">${icon(i.k)}${belt(i,'big')}${weight(i,'big')}${nameTag(i)}${b.ph?` <span class="tm">${esc(b.ph)}</span>`:''}</div>
-    ${faces(b)}
-    ${sh.length ? sh.map(s => `<div class="sheet${S.fit?' fit':''}"><div class="tools"><span>${s.pool!=='1/1'?'Pulje '+s.pool.replace('/',' av '):'Trekning'}</span><button type="button" class="zoom">${S.fit?'Zoom inn':'Hele arket'}</button></div><div class="sc"><img src="${s.f}" alt="Trekningsark" width="${s.w}" height="${s.h}" loading="lazy"></div></div>`).join('') : '<p class="hint">Ingen trekningsark for denne klassen.</p>'}
+  const link = `<a class="sd" href="${draw}" target="_blank" rel="noopener">Sportdata ↗</a>`;
+  p.innerHTML = `${sh.length ? sh.map((s, k) => `<div class="sheet${S.fit?' fit':''}"><div class="tools">${k === 0 ? link : '<span></span>'}<span>${s.pool!=='1/1'?'Pulje '+s.pool.replace('/',' av '):''}</span><button type="button" class="zoom">${S.fit?'Zoom inn':'Hele arket'}</button></div><div class="sc"><img src="${s.f}" alt="Trekningsark" width="${s.w}" height="${s.h}" loading="lazy"></div></div>`).join('') : `<div class="tools">${link}</div>`}
     ${sh.length && has(b) ? '<div class="agekey"><span><i class="r"></i>siste juniorår</span><span><i class="y"></i>ett år til</span><span><i class="g"></i>to år til</span><span><i class="o"></i>blir senior</span><span><i class="s"></i>senior</span></div>' : ''}`;
-  $('x').onclick = () => { if (S.view === 'day') S.dsel = null; else S.ring = null; render(); };
   p.querySelectorAll('.zoom').forEach(z => z.onclick = () => { S.fit = !S.fit; store.set('fit', S.fit); renderPanel(); });
 }
 
