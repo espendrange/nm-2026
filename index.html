@@ -450,4 +450,5 @@ if (eventDay()){ $('now').hidden = false; $('now').onclick = goNow; goNow(); }
 render();
 </script>
 
+<script id="buildcheck">(function(){var B="09b76ca2bc";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
 </html>
