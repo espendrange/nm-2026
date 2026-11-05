@@ -1,0 +1,215 @@
+<!doctype html><html lang="nb"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>Landslagsuttak 2027 – kandidater</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"></head><body>
+<style id="css">
+:root{
+  --bg:#ffffff;--ink:#141414;--soft:#5b5b5b;--line:#1f1f1f;--rule:#d4d4d4;
+  --mon:#c1d9ae;--spa:#bfe3f8;--spe:#ebc55f;--knu:#de808c;--utv:#b6c3e3;
+  --uttatt:#2f6b2a;--uttatt-bg:#dcefd2;--utvp:#3f4f8c;--utvp-bg:#e3e8f7;--ikke:#9a9a9a;
+  --field:#f5f5f5;--focus:#2563eb;--y08:#f4b4b4;--y09:#f8e27a;--y10:#b9e3a8;--y11:#b8d3f4;
+  color-scheme:light;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#17181a;--ink:#ececec;--soft:#a9a9a9;--line:#8a8a8a;--rule:#3a3a3a;
+  --mon:#3d5233;--spa:#284a5e;--spe:#6b5520;--knu:#6e2f37;--utv:#39436a;
+  --uttatt:#a8e09a;--uttatt-bg:#24391f;--utvp:#c3ceff;--utvp-bg:#2b3352;--ikke:#6f6f6f;
+  --field:#222326;--focus:#7aa7ff;--y08:#6e2b2b;--y09:#6b5a16;--y10:#2f5a29;--y11:#28456b;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17181a;--ink:#ececec;--soft:#a9a9a9;--line:#8a8a8a;--rule:#3a3a3a;
+  --mon:#3d5233;--spa:#284a5e;--spe:#6b5520;--knu:#6e2f37;--utv:#39436a;
+  --uttatt:#a8e09a;--uttatt-bg:#24391f;--utvp:#c3ceff;--utvp-bg:#2b3352;--ikke:#6f6f6f;
+  --field:#222326;--focus:#7aa7ff;--y08:#6e2b2b;--y09:#6b5a16;--y10:#2f5a29;--y11:#28456b;color-scheme:dark}
+.y2008,.y2009,.y2010,.y2011{padding:0 .25em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.y2008{background:var(--y11)}.y2009{background:var(--y08)}.y2010{background:var(--y09)}.y2011{background:var(--y10)}
+.yr{font:inherit;font-size:13px;padding:3px 4px;border:1px solid var(--rule);border-radius:4px;background:var(--field);color:var(--ink)}
+.ylegend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-weight:600;font-size:14px;margin:-8px 0 22px}
+.utv li .nmk{color:var(--ink)}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Source Sans 3","Source Sans Pro","Segoe UI",system-ui,sans-serif;font-size:16px;line-height:1.35}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 80px}
+h1,h2,.sec-h,.cls-h,.utv-h{font-family:"Barlow Condensed","Arial Narrow",Impact,sans-serif;font-weight:800;letter-spacing:.01em}
+.top{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end;justify-content:space-between;border-bottom:2px solid var(--line);padding-bottom:14px;margin-bottom:8px}
+.top h1{margin:0;font-size:clamp(28px,4vw,40px);line-height:1}
+.top p{margin:4px 0 0;color:var(--soft);font-size:15px}
+.ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{font:inherit;font-weight:600;font-size:14px;padding:7px 12px;background:transparent;color:var(--ink);border:0;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.save{font-size:13px;color:var(--soft);min-width:9ch}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13.5px;color:var(--soft);margin:12px 0 4px}
+.legend b{color:var(--ink);font-weight:600}
+h2{font-size:clamp(44px,7vw,64px);text-align:center;margin:48px 0 22px;line-height:1}
+.sec{border:1.5px solid var(--line);margin:0 0 34px;background:var(--bg)}
+.sec-h{font-size:clamp(22px,2.8vw,28px);text-align:center;padding:12px 10px;border-bottom:1.5px solid var(--line)}
+.sec[data-k="monster"] .sec-h,.sec[data-k="monster"] .cls-h{background:var(--mon)}
+.sec[data-k="sparring"] .sec-h,.sec[data-k="sparring"] .cls-h{background:var(--spa)}
+.sec[data-k="spes"] .sec-h,.sec[data-k="spes"] .cls-h{background:var(--spe)}
+.sec[data-k="knusing"] .sec-h,.sec[data-k="knusing"] .cls-h{background:var(--knu)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.5px;background:var(--line)}
+.cls{background:var(--bg);display:flex;flex-direction:column}
+.cls-h{font-size:24px;text-align:center;padding:7px 6px;border-bottom:1.5px solid var(--line)}
+.cands{list-style:none;margin:0;padding:8px 0 4px;flex:1}
+.cand{text-align:center;padding:9px 12px 10px;border-bottom:1px solid var(--rule)}
+.cand:last-child{border-bottom:0}
+.v-alle .cand:nth-child(2):not(:last-child){border-bottom:2px solid var(--line)}
+.mv{font:inherit;font-size:14px;line-height:1;width:28px;height:26px;padding:0;border:1.5px solid var(--rule);border-radius:5px;background:transparent;color:var(--ink);cursor:pointer}
+.mv:disabled{opacity:.3;cursor:default}
+.cand[draggable="true"]{cursor:grab}
+.cand.dragging{opacity:.4}
+.cand.over{box-shadow:inset 0 3px 0 var(--focus)}
+.cls.over-cls{box-shadow:inset 0 0 0 2px var(--focus)}
+.ro .mv{display:none}
+.nm{font-weight:600;font-size:17px}
+.club{color:var(--soft);font-size:13.5px}
+.merit{font-size:13.5px;margin-top:2px}
+.row{display:flex;gap:6px;justify-content:center;align-items:center;margin-top:7px;flex-wrap:wrap}
+.pill{font:inherit;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:999px;border:1.5px solid var(--rule);background:transparent;color:var(--soft);cursor:pointer}
+.pill[data-s="uttatt"]{background:var(--uttatt-bg);border-color:var(--uttatt);color:var(--uttatt)}
+.pill[data-s="utvikling"]{background:var(--utvp-bg);border-color:var(--utvp);color:var(--utvp)}
+.cand[data-s="ikke"] .nm,.cand[data-s="ikke"] .merit{color:var(--ikke);text-decoration:line-through}
+.aged{text-decoration:line-through;text-decoration-thickness:2px}
+.pill.senior{border-color:var(--line);color:var(--ink);cursor:default}
+.nm26{font:inherit;font-size:13px;width:12.5em;max-width:100%;padding:3px 7px;border:1px solid var(--rule);border-radius:4px;background:var(--field);color:var(--ink)}
+.nm26::placeholder{color:var(--soft)}
+.add{padding:6px 10px 12px;text-align:center}
+.add button,.addform button{font:inherit;font-size:13.5px;background:none;border:0;color:var(--soft);cursor:pointer;padding:4px 6px;text-decoration:underline;text-underline-offset:3px}
+.addform{display:flex;flex-direction:column;gap:6px;padding:6px 12px 12px}
+.addform input{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--rule);border-radius:4px;background:var(--field);color:var(--ink)}
+.addform .bt{display:flex;justify-content:center;gap:10px}
+.addform .bt button:first-child{color:var(--ink);font-weight:600}
+.empty{color:var(--soft);font-style:italic;text-align:center;padding:16px 10px;font-size:14px}
+.utv{border:1.5px solid var(--line);max-width:560px;margin:0 0 34px auto}
+.utv-h{background:var(--utv);text-align:center;font-size:clamp(22px,2.8vw,28px);padding:12px 10px 2px}
+.utv-sub{background:var(--utv);text-align:center;font-style:italic;padding:0 10px 10px;border-bottom:1.5px solid var(--line)}
+.utv ul{list-style:none;margin:0;padding:12px 16px 16px;text-align:center}
+.utv li{padding:2px 0}
+.utv li span{color:var(--soft)}
+.utv .k{font-size:13.5px;font-weight:600;margin-top:10px;letter-spacing:.02em}
+.ro .pill,.ro .add{pointer-events:none}
+:focus-visible{outline:2.5px solid var(--focus);outline-offset:2px}
+@media (max-width:540px){.wrap{padding:18px 12px 60px}.grid{grid-template-columns:1fr}.utv{max-width:none}}
+@media print{.ctrl,.legend,.add,.nm26:placeholder-shown{display:none}.sec,.utv{break-inside:avoid}}
+</style>
+<div class="wrap" id="app"></div>
+<script type="application/json" id="state">{"v":1,"sections":[{"g":"SENIOR","k":"monster","t":"Mønster sr damer","cl":[{"n":"1. Dan","x":[{"n":"Jitte Eisma","c":"Christiania","m":"NM-sølv (1. Dan – 2025)","s":"kandidat","r":""},{"n":"Elisa Nordmo Johnsen","c":"Tromsø","m":"NM-bronse (1. Dan jr – 2025)","s":"kandidat","r":"","y":"2008"},{"m":"","s":"kandidat","r":"","n":"Mobina Rezai","c":"Bergen"},{"m":"","s":"kandidat","r":"","n":"Lena Vanvik Feragen","c":"Malvik","y":"2008"}]},{"n":"2. Dan","x":[{"n":"Luna-Silvana Ayala-Trujillo","c":"Ål","m":"NM-gull (2. Dan – 2025)","s":"kandidat","r":""},{"n":"Lone Jenstad","c":"Røyken","m":"WC-sølv (2. Dan – 2026)","s":"kandidat","r":""},{"n":"Alba Rolstad","c":"Oslo Øst","m":"VM-sølv (2. Dan jr – 2025), NM-gull (2.–3. Dan jr – 2025)","s":"kandidat","r":""},{"n":"Natalija Gajinov","c":"Asker","m":"VM-gull (1. Dan jr – 2025), NM-gull (1. Dan jr – 2025)","s":"kandidat","r":""},{"n":"Daniela Berg Trujillo","c":"Røyken","m":"","s":"kandidat","r":""},{"n":"Linnea Løve","c":"Skien","m":"WC-kvart (2. Dan jr – 2026), NM-sølv (1. Dan jr – 2025)","s":"kandidat","r":"","y":"2008"},{"m":"","s":"kandidat","r":"","n":"Heidi Fiske","c":"Bergen"},{"n":"Josefine Breivik","c":"Tromsø","m":"EM-gull (1. Dan – 2026), VM-bronse (1. Dan – 2025), NM-gull (1. Dan – 2025)","s":"kandidat","r":""},{"n":"Emilie Viig Østensen","c":"Røyken","m":"NM-bronse (2.–3. Dan jr – 2025)","s":"kandidat","r":""},{"n":"Annabel Gundersen Heltne","c":"Christiania","m":"","s":"kandidat","r":""},{"n":"Marte Blegen Rosland","c":"Arendal","m":"","s":"kandidat","r":""},{"n":"Mina Slagnes Rui","c":"Trondheim","m":"","s":"kandidat","r":""}]},{"n":"3. Dan","x":[{"n":"Jenny Marvel Listhaug","c":"Trondheim","m":"NM-gull (3. Dan – 2025)","s":"kandidat","r":""},{"n":"Ann Linnea Hole","c":"Bergen","m":"EM-sølv (3. Dan – 2026), WC-bronse (3. Dan – 2026)","s":"kandidat","r":""},{"n":"Solveig Lund Haukebø","c":"Trondheim","m":"VM-kvart (3. Dan – 2025), WC-kvart (3. Dan – 2026), NM-bronse (3. Dan – 2025)","s":"kandidat","r":""},{"n":"Selma Øen Li","c":"Ål","m":"EM-kvart (3. Dan – 2026), VM 9. plass (3. Dan – 2025)","s":"kandidat","r":""},{"n":"Sajane Karina Olsen","c":"Tromsø","m":"NM-sølv (2. Dan – 2025)","s":"ikke","r":""}]},{"n":"4.–6. Dan","x":[{"n":"Rita Moseng Sivertsvik","c":"Trondheim","m":"EM-bronse (4.–6. Dan – 2026), NM-sølv (4.–6. Dan – 2025), VM-kvart (4.–6. Dan – 2025)","s":"kandidat","r":""},{"n":"Marielle Lind","c":"Bergen","m":"NM-gull (4.–6. Dan – 2025), VM-kvart (4.–6. Dan – 2025)","s":"kandidat","r":""},{"n":"Stine Hauge Iversen","c":"Bergen","m":"NM-sølv (3. Dan – 2025)","s":"kandidat","r":""}]}]},{"g":"SENIOR","k":"monster","t":"Mønster sr herrer","cl":[{"n":"1. Dan","x":[{"n":"Fredrik Jonathan Marjoni","c":"Bærum","m":"NM-sølv (1. Dan – 2025)","s":"kandidat","r":""},{"n":"Tor Kristian Kyrkjeeide","c":"Oslo Øst","m":"NM-bronse (1. Dan – 2025), WC-kvart (1. Dan – 2026)","s":"kandidat","r":""},{"n":"Theo Kjelsrud Kulvik","c":"Trondheim","m":"NM-gull (1. Dan jr – 2025), EM-bronse (1. Dan jr – 2026), WC-kvart (1. Dan jr – 2026)","s":"kandidat","r":"","y":"2008"},{"n":"Nicolai Thancke Larsen","c":"Trondheim","m":"","s":"kandidat","r":"","y":"2008"},{"n":"Sindre Skille Amundsen","c":"Røyken","m":"","s":"kandidat","r":"","y":"2008"},{"n":"Gabriel Listanco Einmo","c":"Trondheim","m":"","s":"kandidat","r":""},{"n":"Daniel Mørck Paradina","c":"Oslo Øst","m":"","s":"kandidat","r":""},{"n":"Fredrik Øxseth Ski","c":"Ålesund","m":"","s":"kandidat","r":""}]},{"n":"2. Dan","x":[{"n":"Eirik Høyland Nordal","c":"Kirkenes","m":"NM-gull (2.–3. Dan jr – 2025), VM-kvart (2. Dan jr – 2025)","s":"kandidat","r":""},{"n":"Zaniar Kiyani","c":"Bergen","m":"NM-gull (1. Dan – 2025)","s":"kandidat","r":""},{"n":"William Løve","c":"Skien","m":"NM-bronse (1. Dan – 2025)","s":"kandidat","r":""},{"m":"","s":"kandidat","r":"","n":"Marcus Qi Klungtveit Vollan","c":"Bergen"}]},{"n":"3. Dan","x":[{"n":"Ingebrigt Steinkjer","c":"Trondheim","m":"VM-bronse (3. Dan – 2025), WC-sølv (3. Dan – 2026)","s":"kandidat","r":""},{"n":"Simen Selvik Nordang","c":"Asker","m":"EM-bronse (3. Dan – 2026), NM-bronse (3. Dan – 2025)","s":"kandidat","r":""},{"n":"Mats Lind","c":"Bergen","m":"VM-gull (2. Dan – 2025), EM-gull (2. Dan – 2026), NM-gull (2. Dan – 2025)","s":"kandidat","r":""},{"n":"Emil Skogholt Kristensen","c":"Tromsø","m":"EM-sølv (2. Dan – 2026), NM-sølv (2. Dan – 2025), VM-kvart (2. Dan – 2025)","s":"kandidat","r":""},{"m":"","s":"kandidat","r":"","n":"Stian Hammerseth Wighus","c":"Røyken"}]},{"n":"4.–6. Dan","x":[{"n":"Lars Tønder","c":"Oslo Øst","m":"NM-gull (3. Dan – 2025), EM-bronse (3. Dan – 2026), VM-kvart (3. Dan – 2025)","s":"kandidat","r":""},{"n":"Martin Aleksander Hjelsvold Berg","c":"Trondheim","m":"NM-gull (4.–6. Dan – 2025)","s":"kandidat","r":""},{"n":"Theo Loodtz","c":"Bergen","m":"NM-sølv (4.–6. Dan – 2025)","s":"kandidat","r":""},{"n":"Kristian Forfot Gjersvold","c":"Trondheim","m":"NM-sølv (3. Dan – 2025)","s":"kandidat","r":""}]}]},{"g":"SENIOR","k":"sparring","t":"Sparring sr damer","cl":[{"n":"−50 kg","x":[{"n":"Selma Øen Li","c":"Ål","m":"EM-kvart (−50 kg – 2026), NM-sølv (−55 kg – 2025)","s":"kandidat","r":""},{"n":"Matilde Halleland Børresen","c":"Bergen","m":"NM-gull (−53 kg jr – 2025)","s":"kandidat","r":""}]},{"n":"−55 kg","x":[{"n":"Mobina Rezai","c":"Bergen","m":"WC-sølv (−55 kg – 2026), NM-bronse (−55 kg – 2025)","s":"kandidat","r":""},{"n":"Sajane Karina Olsen","c":"Tromsø","m":"NM-gull (−55 kg – 2025)","s":"kandidat","r":""},{"n":"Swethaa Sujan","c":"Sola","m":"NM-bronse (−53 kg jr – 2025)","s":"kandidat","r":"","y":"2008"},{"n":"Joudi Kolko","c":"Haram","m":"EM-laget (2026)","s":"kandidat","r":"","y":"2008"}]},{"n":"−60 kg","x":[{"n":"Natalija Gajinov","c":"Asker","m":"NM-gull (−61 kg jr – 2025)","s":"kandidat","r":""},{"n":"Mina Slagnes Rui","c":"Trondheim","m":"NM-bronse (−60 kg – 2025)","s":"kandidat","r":""},{"n":"Camilla Stranden","c":"Trondheim","m":"NM-gull (−57 kg jr – 2025)","s":"kandidat","r":"","y":"2008"},{"n":"Stine Hauge Iversen","c":"Bergen","m":"WC-bronse (−55 kg – 2026), VM-kvart (−55 kg – 2025), NM-gull (−60 kg – 2025)","s":"kandidat","r":""}]},{"n":"−65 kg","x":[{"n":"Luna-Silvana Ayala-Trujillo","c":"Ål","m":"EM-bronse (−65 kg – 2026), VM-kvart (−65 kg – 2025)","s":"kandidat","r":""},{"n":"Alba Rolstad","c":"Oslo Øst","m":"NM-gull (−65 kg jr – 2025)","s":"kandidat","r":""},{"n":"Mathea Tessem Størseth","c":"Trondheim","m":"WC-kvart (−61 kg jr – 2026)","s":"kandidat","r":"","y":"2008"},{"n":"Linnea Løve","c":"Skien","m":"WC-kvart (−65 kg jr – 2026), NM-sølv (−61 kg jr – 2025)","s":"kandidat","r":"","y":"2008"}]},{"n":"−70 kg","x":[{"n":"Jenny Marvel Listhaug","c":"Trondheim","m":"VM-gull (−70 kg – 2025), NM-gull (−70 kg – 2025)","s":"kandidat","r":""},{"n":"Thalia Safira Stendal","c":"Gauldal","m":"WC-bronse (−70 kg – 2026), VM-sølv (+65 kg jr – 2025)","s":"kandidat","r":""}]},{"n":"−75 kg","x":[{"n":"Nanna Brekke Medin","c":"Oslo Øst","m":"WC-bronse (−75 kg – 2026), NM-bronse (−70 kg – 2025)","s":"kandidat","r":""},{"n":"Erica Maridal Hoflandsdal","c":"Molde","m":"NM-gull (+75 kg – 2025)","s":"kandidat","r":""}]},{"n":"+75 kg","x":[{"n":"Mina Bratterud Hansen","c":"Trondheim","m":"WC-sølv (+75 kg – 2026), NM-bronse (+75 kg – 2025)","s":"kandidat","r":""},{"n":"Nathalie Nilssen Nordlund","c":"Surnadal","m":"WC-kvart (+75 kg – 2026)","s":"kandidat","r":""}]}]},{"g":"SENIOR","k":"sparring","t":"Sparring sr herrer","cl":[{"n":"−57 kg","x":[{"n":"Conrad Leren Hamang","c":"Christiania","m":"VM-kvart (−55 kg jr – 2025)","s":"kandidat","r":""}]},{"n":"−63 kg","x":[{"n":"Markus Kjernaas Kristiansen","c":"Drammen","m":"NM-gull (−60 kg jr – 2025), EM-bronse (−60 kg jr – 2026), VM-kvart (−60 kg jr – 2025)","s":"kandidat","r":"","y":"2008"},{"n":"Sigve Skotheim Gjerdsbakk","c":"Haram","m":"NM-sølv (−60 kg jr – 2025)","s":"kandidat","r":"","y":"2008"},{"n":"Filip Krzyska","c":"Bryne","m":"NM-bronse (−60 kg jr – 2025)","s":"kandidat","r":"","y":"2008"}]},{"n":"−69 kg","x":[{"n":"Daniel Hassanipour","c":"Trondheim","m":"VM-bronse (−63 kg – 2025), EM-bronse (−63 kg – 2026), NM-sølv (−63 kg – 2025)","s":"kandidat","r":""},{"n":"Daniil Valkov","c":"Tromsø","m":"WC-sølv (−69 kg – 2026), NM-gull (−63 kg – 2025), VM-bronse (−63 kg – 2025), EM-bronse (−63 kg – 2026)","s":"kandidat","r":""},{"n":"Marcus Vollan","c":"Bergen","m":"NM-bronse (−69 kg – 2025), WC-kvart (−69 kg – 2026)","s":"kandidat","r":""},{"n":"Ulrik Akrim","c":"Surnadal","m":"NM-gull (−65 kg jr – 2025)","s":"kandidat","r":"","y":"2008"},{"n":"Nikolai Lund","c":"Trondheim","m":"NM-bronse (−65 kg jr – 2025)","s":"kandidat","r":"","y":"2008"}]},{"n":"−75 kg","x":[{"n":"Egor Andreevich Valkov","c":"Tromsø","m":"NM-gull (−75 kg – 2025), EM-sølv (−75 kg – 2026), WC-kvart (−75 kg – 2026)","s":"kandidat","r":""},{"n":"Karl Henrik Wevang","c":"Røyken","m":"NM-gull (−75 kg jr – 2025), VM-kvart (−75 kg jr – 2025)","s":"kandidat","r":""},{"n":"Eirik Høyland Nordal","c":"Kirkenes","m":"NM-gull (−70 kg jr – 2025)","s":"kandidat","r":""},{"n":"Daniel Mørck Paradina","c":"Oslo Øst","m":"","s":"kandidat","r":""}]},{"n":"−81 kg","x":[{"n":"Vegard Cornell Jacobsen","c":"Oslo Øst","m":"NM-gull (−81 kg – 2025), WC-sølv (−81 kg – 2026)","s":"kandidat","r":""},{"n":"Theo Loodtz","c":"Bergen","m":"NM-gull (−69 kg – 2025), VM-sølv (−69 kg – 2025)","s":"kandidat","r":""}]},{"n":"−87 kg","x":[{"n":"David Stige","c":"Bergen","m":"WC-gull (−87 kg – 2026), EM-bronse (−87 kg – 2026), VM-kvart (−87 kg – 2025)","s":"kandidat","r":""},{"n":"Julian Julshamn Melkvik","c":"Trondheim","m":"NM-bronse (+75 kg jr – 2025)","s":"kandidat","r":""}]},{"n":"+87 kg","x":[{"n":"Mads Johannessen Prestegard","c":"Bergen","m":"NM-gull (+87 kg – 2025)","s":"kandidat","r":""},{"n":"Kevin Alexander Andreassen","c":"Røyken","m":"WC-kvart (+87 kg – 2026)","s":"kandidat","r":""}]}]},{"g":"SENIOR","k":"spes","t":"Spesialteknikk sr","cl":[{"n":"Herrer","x":[{"n":"Trygve Aakvik","c":"Trondheim","m":"VM-gull (spesialteknikk – 2025), NM-gull (spesialteknikk – 2025)","s":"kandidat","r":""},{"n":"Julian Julshamn Melkvik","c":"Trondheim","m":"VM-bronse (spesialteknikk jr – 2025), NM-gull (spesialteknikk jr – 2025)","s":"kandidat","r":""},{"n":"Kevin Alexander Andreassen","c":"Røyken","m":"NM-sølv (spesialteknikk – 2025)","s":"kandidat","r":""},{"n":"Daniel Hassanipour","c":"Trondheim","m":"NM-bronse (spesialteknikk – 2025)","s":"kandidat","r":""}]},{"n":"Damer","x":[{"n":"Luna-Silvana Ayala-Trujillo","c":"Ål","m":"NM-gull (spesialteknikk – 2025)","s":"kandidat","r":""},{"n":"Annabel Gundersen Heltne","c":"Christiania","m":"NM-sølv (spesialteknikk – 2025), WC-kvart (spesialteknikk – 2026)","s":"kandidat","r":""},{"n":"Ann Linnea Hole","c":"Bergen","m":"","s":"kandidat","r":""},{"n":"Camilla Stranden","c":"Trondheim","m":"NM-gull (spesialteknikk jr – 2025), WC-kvart (spesialteknikk jr – 2026)","s":"kandidat","r":"","y":"2008"}]}]},{"g":"SENIOR","k":"knusing","t":"Knusing sr","cl":[{"n":"Herrer","x":[{"n":"Julian Julshamn Melkvik","c":"Trondheim","m":"VM-gull (kraftbrekk jr – 2025)","s":"kandidat","r":""},{"n":"Simen Selvik Nordang","c":"Asker","m":"NM-gull (knusing – 2025)","s":"kandidat","r":""},{"n":"Lars Kjetil Myrstad","c":"Hustadvika","m":"NM-sølv (knusing – 2025)","s":"kandidat","r":""},{"n":"Kai Saxrud","c":"Røyken","m":"NM-bronse (knusing – 2025)","s":"kandidat","r":""},{"n":"David Stige","c":"Bergen","m":"WC-kvart (kraftbrekk – 2026)","s":"kandidat","r":""}]},{"n":"Damer","x":[{"n":"Linn Anita Lundager","c":"Trondheim","m":"NM-sølv (knusing – 2025)","s":"kandidat","r":""},{"n":"Nanna Brekke Medin","c":"Oslo Øst","m":"WC 4. plass (kraftbrekk – 2026)","s":"kandidat","r":""},{"n":"Rita Moseng Sivertsvik","c":"Trondheim","m":"NM-bronse (knusing – 2025)","s":"kandidat","r":""},{"n":"Malin Sørli Ommundsen","c":"Bergen","m":"NM-bronse (knusing – 2025)","s":"kandidat","r":""}]}]},{"g":"JUNIOR","k":"monster","t":"Mønster jr damer","cl":[{"n":"1. Dan","x":[{"n":"Maria Justine Faburada Eide","c":"Kvitsøy og Randaberg","m":"NM-gull (1. Dan – 2025), WC-kvart (1. Dan – 2026)","s":"kandidat","r":"","y":"2009"},{"n":"Mille Christin Opperud Birkeland","c":"Røyken","m":"NM-sølv (1. Dan – 2025)","s":"kandidat","r":"","y":"2009"},{"n":"Mia Løvdal-Bakken","c":"Malvik","m":"NM-bronse (1. Dan – 2025)","s":"kandidat","r":"","y":"2010"},{"n":"Olivia Ahmed","c":"Kjøllefjord","m":"","s":"kandidat","r":"","y":"2011"},{"n":"Eliva Pedersen","c":"Trondheim","m":"","s":"kandidat","r":"","y":"2009"},{"m":"","s":"kandidat","r":"","n":"Lena Vanvik Feragen","c":"Malvik","y":"2008"}]},{"n":"2. Dan","x":[{"n":"Veronika Kornisevych Mosand","c":"Trondheim","m":"NM-bronse (1. Dan – 2025)","s":"kandidat","r":"","y":"2010"},{"n":"Linnea Løve","c":"Skien","m":"WC-kvart (2. Dan – 2026), NM-sølv (1. Dan – 2025)","s":"kandidat","r":"","y":"2008"}]}]},{"g":"JUNIOR","k":"monster","t":"Mønster jr herrer","cl":[{"n":"1. Dan","x":[{"n":"Arin Blekastad","c":"Christiania","m":"NM-sølv (1. Dan – 2025)","s":"kandidat","r":"","y":"2009"},{"n":"Marius Kvinge Braadland","c":"Fana","m":"NM-bronse (1. Dan – 2025)","s":"kandidat","r":"","y":"2009"},{"n":"Teodor Sebastian Basa","c":"Molde","m":"EM-deltaker (2026)","s":"kandidat","r":"","y":"2010"},{"n":"Nicolai Thancke Larsen","c":"Trondheim","m":"","s":"kandidat","r":"","y":"2008"},{"n":"Sindre Skille Amundsen","c":"Røyken","m":"","s":"kandidat","r":"","y":"2008"},{"n":"Fredrik Bergersen Moen","c":"Trondheim","m":"","s":"kandidat","r":"","y":"2009"}]},{"n":"2. Dan","x":[{"n":"Tobias Kjølsø","c":"Værnes","m":"WC-kvart (2. Dan – 2026), NM-gull (1. Dan – 2025)","s":"kandidat","r":"","y":"2009"}]}]},{"g":"JUNIOR","k":"sparring","t":"Sparring jr damer","cl":[{"n":"−49 kg","x":[{"n":"Olivia Ahmed","c":"Kjøllefjord","m":"LM-bronse (−48 kg yngre jr – 2025)","s":"kandidat","r":"","y":"2011"}]},{"n":"−53 kg","x":[{"n":"Mia Løvdal-Bakken","c":"Malvik","m":"WC-kvart (−53 kg – 2026), NM-sølv (−57 kg – 2025)","s":"kandidat","r":"","y":"2010"},{"n":"Lycke Marie Selvik","c":"Christiania","m":"NM-bronse (−57 kg – 2025)","s":"kandidat","r":"","y":"2010"},{"n":"Joudi Kolko","c":"Haram","m":"EM-laget (2026)","s":"kandidat","r":"","y":"2008"},{"n":"Swethaa Sujan","c":"Sola","m":"NM-bronse (−53 kg – 2025)","s":"kandidat","r":"","y":"2008"}]},{"n":"−57 kg","x":[{"n":"Veronika Kornisevych Mosand","c":"Trondheim","m":"NM-gull (−57 kg – 2025)","s":"kandidat","r":"","y":"2010"},{"n":"Camilla Stranden","c":"Trondheim","m":"NM-gull (−57 kg – 2025)","s":"kandidat","r":"","y":"2008"}]},{"n":"−61 kg","x":[{"n":"Anja Abilgos Brustad","c":"Jessheim","m":"","s":"kandidat","r":"","y":"2009"},{"n":"Sofie Lauridsen","c":"Skien","m":"NM-sølv (−61 kg – 2025)","s":"kandidat","r":"","y":"2009"},{"n":"Marie Irgens-Hansen","c":"Bergen","m":"","s":"kandidat","r":"","y":"2011"},{"n":"Mille Christin Opperud Birkeland","c":"Røyken","m":"NM-bronse (−57 kg – 2025)","s":"ikke","r":"","y":"2009"},{"n":"Mathea Tessem Størseth","c":"Trondheim","m":"WC-kvart (−61 kg – 2026)","s":"kandidat","r":"","y":"2008"}]},{"n":"−65 kg","x":[{"n":"Panthea Maria Valdez Ytternes","c":"Oslo Øst","m":"NM-gull (−61 kg – 2025)","s":"kandidat","r":"","y":"2009"},{"n":"Linnea Løve","c":"Skien","m":"WC-kvart (−65 kg – 2026), NM-sølv (−61 kg – 2025)","s":"kandidat","r":"","y":"2008"}]},{"n":"+65 kg","x":[{"n":"Ebba Østensen Gjelstad","c":"Oslo Øst","m":"WC-sølv (+65 kg – 2026)","s":"kandidat","r":"","y":"2010"},{"n":"Clara Sofie Fürstenberg","c":"Fana","m":"NM-gull (+61 kg – 2025)","s":"kandidat","r":"","y":"2010"},{"n":"Emilie Dahl","c":"Bergen","m":"WC-bronse (+60 kg, 12–14 år – 2026)","s":"kandidat","r":"","y":"2011"}]}]},{"g":"JUNIOR","k":"sparring","t":"Sparring jr herrer","cl":[{"n":"−55 kg","x":[{"n":"Omid Kamali","c":"Bryne","m":"","s":"kandidat","r":"","y":"2009"}]},{"n":"−60 kg","x":[{"n":"Arin Blekastad","c":"Christiania","m":"NM-gull (−60 kg – 2025)","s":"kandidat","r":"","y":"2009"},{"n":"Teodor Sebastian Basa","c":"Molde","m":"NM-bronse (−60 kg – 2025)","s":"kandidat","r":"","y":"2010"},{"n":"Sigve Skotheim Gjerdsbakk","c":"Haram","m":"NM-sølv (−60 kg – 2025)","s":"kandidat","r":"","y":"2008"},{"n":"Markus Kjernaas Kristiansen","c":"Drammen","m":"NM-gull (−60 kg – 2025), EM-bronse (−60 kg – 2026), VM-kvart (−60 kg – 2025)","s":"kandidat","r":"","y":"2008"},{"n":"Filip Krzyska","c":"Bryne","m":"NM-bronse (−60 kg – 2025)","s":"kandidat","r":"","y":"2008"}]},{"n":"−65 kg","x":[{"n":"Theodor Ingebrigtsen Kvernberg","c":"Trondheim","m":"EM-deltaker (−65 kg – 2026)","s":"kandidat","r":"","y":"2010"},{"n":"Lucas Kalsås-Carlsen","c":"Oslo Øst","m":"NM-sølv (−60 kg – 2025)","s":"kandidat","r":"","y":"2009"},{"n":"Marius Schedelberger Anderssen","c":"Kristiansand","m":"LM-gull (−65 kg jr, 2–1 gup – 2025)","s":"kandidat","r":"","y":"2009"},{"n":"Ulrik Akrim","c":"Surnadal","m":"NM-gull (−65 kg – 2025)","s":"kandidat","r":"","y":"2008"},{"n":"Nikolai Lund","c":"Trondheim","m":"NM-bronse (−65 kg – 2025)","s":"kandidat","r":"","y":"2008"}]},{"n":"−70 kg","x":[{"n":"Melvin Rolstad","c":"Oslo Øst","m":"NM-gull (−70 kg – 2025)","s":"kandidat","r":"","y":"2009"}]},{"n":"−75 kg","x":[{"n":"Marius Kvinge Braadland","c":"Fana","m":"NM-gull (+70 kg – 2025), EM-deltaker (2026)","s":"kandidat","r":"","y":"2009"}]},{"n":"+75 kg","x":[{"n":"Tobias Kjølsø","c":"Værnes","m":"NM-bronse (+70 kg – 2025)","s":"kandidat","r":"","y":"2009"},{"n":"Fredrik Bergersen Moen","c":"Trondheim","m":"","s":"kandidat","r":"","y":"2009"}]}]},{"g":"JUNIOR","k":"spes","t":"Spesialteknikk jr","cl":[{"n":"Herrer","x":[{"n":"Melvin Rolstad","c":"Oslo Øst","m":"NM-gull (spesialteknikk – 2025)","s":"kandidat","r":"","y":"2009"},{"n":"Håvard Petter Harridsleff Kirkeby","c":"Moss","m":"NM-sølv (spesialteknikk – 2025)","s":"kandidat","r":"","y":"2010"},{"n":"Fredrik Bergersen Moen","c":"Trondheim","m":"","s":"kandidat","r":"","y":"2009"}]},{"n":"Damer","x":[{"n":"Panthea Maria Valdez Ytternes","c":"Oslo Øst","m":"NM-gull (spesialteknikk – 2025)","s":"kandidat","r":"","y":"2009"},{"n":"Clara Sofie Fürstenberg","c":"Fana","m":"NM-sølv (spesialteknikk – 2025)","s":"kandidat","r":"","y":"2010"},{"n":"Camilla Stranden","c":"Trondheim","m":"NM-gull (spesialteknikk – 2025), WC-kvart (spesialteknikk – 2026)","s":"kandidat","r":"","y":"2008"}]}]}]}</script>
+<script id="app-js">
+(function(){
+const RESET=":root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}";
+const ORDER=["kandidat","uttatt","utvikling","ikke"];
+const LABEL={kandidat:"Kandidat",uttatt:"Tatt ut",utvikling:"Utviklingsgruppe",ikke:"Ikke aktuell"};
+let state=JSON.parse(document.getElementById("state").textContent);
+let view="alle", readOnly=true, artifactNs=null, pending=false, timer=null, adding=null;
+const app=document.getElementById("app");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const club=c=>c?`(${esc(c)} Taekwon-Do klubb)`:"";
+
+function setSave(t){const el=document.getElementById("save"); if(el) el.textContent=t;}
+
+function render(){
+  const groups=["SENIOR","JUNIOR"];
+  let h=`<header class="top"><div><h1>Landslagsuttak 2027</h1><p>Kandidater fra VM 2025, EM 2026, World Cup 2026 og NM 2025. NM 2026 fylles inn i helga.</p></div>
+  <div class="ctrl"><div class="seg" role="group" aria-label="Visning">
+  <button type="button" data-view="alle" aria-pressed="${view==="alle"}">Alle kandidater</button>
+  <button type="button" data-view="uttak" aria-pressed="${view==="uttak"}">Uttak</button></div>
+  <span class="save" id="save" aria-live="polite">Lesekopi · oppdatert 05.11. kl. 16:13</span></div></header>`;
+  if(view==="alle") h+=`<div class="legend"><span>De to over streken er førstevalget i klassen.</span><span>VM = VM 2025, EM = EM 2026, WC = World Cup 2026, NM = NM 2025</span></div>`;
+  for(const g of groups){
+    h+=`<h2>${g}</h2>`;
+    if(g==="JUNIOR") h+=`<p class="ylegend"><span class="aged">Født 2008 – senior</span><span class="y2009">Født 2009</span><span class="y2010">Født 2010</span><span class="y2011">Født 2011</span></p>`;
+    state.sections.forEach((s,si)=>{ if(s.g!==g) return;
+      h+=`<section class="sec" data-k="${s.k}"><div class="sec-h">${esc(s.t.toUpperCase())}</div><div class="grid">`;
+      s.cl.forEach((c,ci)=>{
+        const list=c.x.map((p,pi)=>({p,pi})).filter(o=>view==="alle"||o.p.s==="uttatt");
+        h+=`<div class="cls" data-c="${si}.${ci}"><div class="cls-h">${esc(c.n)}</div><ul class="cands">`;
+        if(!list.length) h+=`<li class="empty">${view==="alle"?"Ingen kandidater ennå":"Ingen tatt ut"}</li>`;
+        for(const {p,pi} of list){
+          h+=`<li class="cand" data-s="${p.s}"${view==="alle"&&!readOnly?` draggable="true" data-d="${si}.${ci}.${pi}"`:""}><div class="nm"><span class="${s.g==="JUNIOR"&&p.y==="2008"?"aged":(/^20(08|09|10|11)$/.test(p.y||"")?"y"+p.y:"")}">${esc(p.n)}</span></div><div class="club">${club(p.c)}</div>`;
+          if(view==="alle"){
+            h+=`<div class="merit">${esc(p.m||"")}</div><div class="row">
+            <button type="button" class="mv" data-mv="-1" data-k="${si}.${ci}.${pi}" aria-label="Flytt ${esc(p.n)} opp" ${pi===0?"disabled":""}>↑</button><button type="button" class="mv" data-mv="1" data-k="${si}.${ci}.${pi}" aria-label="Flytt ${esc(p.n)} ned" ${pi===c.x.length-1?"disabled":""}>↓</button>
+            ${s.g==="JUNIOR"&&p.y==="2008"?`<button type="button" class="pill senior" disabled aria-label="${esc(p.n)} blir senior">Senior</button>`:`<button type="button" class="pill" data-s="${p.s}" data-k="${si}.${ci}.${pi}" aria-label="Status for ${esc(p.n)}: ${LABEL[p.s]}. Trykk for å endre.">${LABEL[p.s]}</button>`}
+            <input class="nm26" data-k="${si}.${ci}.${pi}" value="${esc(p.r||"")}" placeholder="NM 2026-resultat" aria-label="NM 2026-resultat for ${esc(p.n)}" ${readOnly?"readonly":""}>${s.g==="JUNIOR"?`<select class="yr" data-k="${si}.${ci}.${pi}" aria-label="Fødselsår for ${esc(p.n)}" ${readOnly?"disabled":""}>${["","2007","2008","2009","2010","2011","Annet"].map(v=>`<option value="${v}" ${(p.y||"")===v?"selected":""}>${v||"Født"}</option>`).join("")}</select>`:""}</div>`;
+          } else if(p.r){ h+=`<div class="merit">NM 2026: ${esc(p.r)}</div>`; }
+          h+=`</li>`;
+        }
+        h+=`</ul>`;
+        if(view==="alle"&&!readOnly){
+          if(adding===`${si}.${ci}`) h+=`<form class="addform" data-k="${si}.${ci}"><input name="n" placeholder="Navn" aria-label="Navn" required><input name="c" placeholder="Klubb (f.eks. Bergen)" aria-label="Klubb"><input name="m" placeholder="Meritter" aria-label="Meritter"><div class="bt"><button type="submit">Legg til</button><button type="button" data-cancel>Avbryt</button></div></form>`;
+          else h+=`<div class="add"><button type="button" data-add="${si}.${ci}">Legg til kandidat</button></div>`;
+        }
+        h+=`</div>`;
+      });
+      h+=`</div></section>`;
+    });
+    const utv=[];
+    state.sections.forEach(s=>{ if(s.g!==g) return; s.cl.forEach(c=>c.x.forEach(p=>{ if(p.s==="utvikling" && !utv.some(u=>u.n===p.n)) utv.push({n:p.n,c:p.c,y:p.y,k:s.t.split(" ")[0]}); })); });
+    if(view==="uttak"||utv.length){
+      h+=`<aside class="utv"><div class="utv-h">UTVIKLINGSGRUPPE</div><div class="utv-sub">Ikke med til EM, men deltar på samlinger</div><ul>`;
+      if(!utv.length) h+=`<li class="empty">Ingen satt i utviklingsgruppen ennå</li>`;
+      for(const kind of ["Sparring","Mønster","Spesialteknikk","Knusing"]){
+        const l=utv.filter(u=>u.k===kind); if(!l.length) continue;
+        h+=`<li class="k">${kind.toUpperCase()}</li>`+l.map(u=>`<li><span class="nmk ${g==="JUNIOR"&&u.y==="2008"?"aged":(/^20(08|09|10|11)$/.test(u.y||"")?"y"+u.y:"")}">${esc(u.n)}</span> <span>${club(u.c)}</span></li>`).join("");
+      }
+      h+=`</ul></aside>`;
+    }
+  }
+  app.innerHTML=h;
+  app.classList.toggle("ro",readOnly);
+  app.classList.toggle("v-alle",view==="alle");
+  if(adding){const f=app.querySelector(".addform input"); f&&f.focus();}
+}
+
+function get(k){const [a,b,c]=k.split(".").map(Number); return state.sections[a].cl[b].x[c];}
+function changed(){ if(readOnly) return; pending=true; setSave("Ikke lagret"); clearTimeout(timer); timer=setTimeout(save,1500); }
+
+function buildDoc(){
+  // same shell the Artifact tool publishes, so a later publish from the tool replaces it instead of nesting it
+  const css=document.getElementById("css").textContent;
+  const js=document.getElementById("app-js").textContent;
+  const shell='<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+RESET+'</style></head><body>';
+  const head='<title>Landslagsuttak 2027 – kandidater</title>\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">\n';
+  const json=JSON.stringify(state).replace(/</g,"\\u003c");
+  return `${shell}${head}<style id="css">${css}</style>\n<div class="wrap" id="app"></div>\n<script type="application/json" id="state">${json}<\/script>\n<script id="app-js">${js}<\/script>\n</body></html>`;
+}
+async function save(){
+  if(!pending||readOnly) return;
+  if(!artifactNs){ setSave("Venter på lagring…"); return; }
+  pending=false; setSave("Lagrer…");
+  try{ await artifactNs.publish(buildDoc()); setSave("Lagret"); }
+  catch(e){
+    const code=e&&e.code;
+    if(code==="not_writer"||code==="not_granted"||code==="not_declared"){ readOnly=true; render(); setSave("Kun lesetilgang"); }
+    else if(code==="conflict"){ setSave("Oppdatert av andre – laster inn"); }
+    else if(code==="rate_limited"){ pending=true; setSave("Ikke lagret"); clearTimeout(timer); timer=setTimeout(save,8000); }
+    else { pending=true; setSave("Ikke lagret – prøv igjen"); }
+  }
+}
+
+app.addEventListener("click",e=>{
+  const v=e.target.closest("[data-view]"); if(v){ view=v.dataset.view; adding=null; render(); return; }
+  const mv=e.target.closest(".mv"); if(mv&&!readOnly){ const [a,b,c]=mv.dataset.k.split(".").map(Number); const d=Number(mv.dataset.mv); const arr=state.sections[a].cl[b].x; const j=c+d; if(j<0||j>=arr.length) return; [arr[c],arr[j]]=[arr[j],arr[c]]; render(); const f=app.querySelector(`.mv[data-k="${a}.${b}.${j}"][data-mv="${d}"]:not([disabled])`)||app.querySelector(`.mv[data-k="${a}.${b}.${j}"]:not([disabled])`); f&&f.focus(); changed(); return; }
+  const p=e.target.closest(".pill"); if(p&&!readOnly){ const o=get(p.dataset.k); o.s=ORDER[(ORDER.indexOf(o.s)+1)%ORDER.length]; render(); const again=app.querySelector(`.pill[data-k="${p.dataset.k}"]`); again&&again.focus(); changed(); return; }
+  const a=e.target.closest("[data-add]"); if(a){ adding=a.dataset.add; render(); return; }
+  if(e.target.closest("[data-cancel]")){ adding=null; render(); }
+});
+app.addEventListener("submit",e=>{
+  e.preventDefault(); const f=e.target; const [a,b]=f.dataset.k.split(".").map(Number);
+  const n=f.n.value.trim(); if(!n) return;
+  state.sections[a].cl[b].x.push({n,c:f.c.value.trim(),m:f.m.value.trim(),s:"kandidat",r:""});
+  adding=null; render(); changed();
+});
+app.addEventListener("change",e=>{
+  if(e.target.classList.contains("nm26")){ get(e.target.dataset.k).r=e.target.value.trim(); changed(); }
+  if(e.target.classList.contains("yr")){ const v=e.target.value, n=get(e.target.dataset.k).n; state.sections.forEach(s=>{ s.cl.forEach(c=>c.x.forEach(x=>{ if(x.n===n) x.y=v; })); }); render(); changed(); }
+});
+
+let drag=null;
+app.addEventListener("dragstart",e=>{const li=e.target.closest("[data-d]"); if(!li||e.target.closest("input")) return; drag=li.dataset.d; e.dataTransfer.effectAllowed="move"; try{e.dataTransfer.setData("text/plain",drag)}catch(_){} li.classList.add("dragging");});
+app.addEventListener("dragend",()=>{drag=null; app.querySelectorAll(".dragging,.over,.over-cls").forEach(el=>el.classList.remove("dragging","over","over-cls"));});
+app.addEventListener("dragover",e=>{if(!drag) return; const li=e.target.closest("[data-d]"), cl=e.target.closest("[data-c]"); const tk=li?li.dataset.d:(cl?cl.dataset.c:null); if(!tk) return; if(drag.split(".")[0]!==tk.split(".")[0]) return; e.preventDefault(); app.querySelectorAll(".over,.over-cls").forEach(el=>el.classList.remove("over","over-cls")); if(li) li.classList.add("over"); if(cl) cl.classList.add("over-cls");});
+app.addEventListener("drop",e=>{if(!drag) return; const li=e.target.closest("[data-d]"), cl=e.target.closest("[data-c]"); if(!li&&!cl) return; const s=drag.split(".").map(Number); const tc=(li?li.dataset.d:cl.dataset.c).split(".").map(Number); if(s[0]!==tc[0]) return; e.preventDefault(); const sec=state.sections[s[0]]; const src=sec.cl[s[1]].x, dst=sec.cl[tc[1]].x; if(s[1]===tc[1]){ if(!li){drag=null; render(); return;} const [it]=src.splice(s[2],1); src.splice(tc[2],0,it); } else { if(dst.some(x=>x.n===src[s[2]].n)){drag=null; render(); return;} const [it]=src.splice(s[2],1); if(li) dst.splice(tc[2],0,it); else dst.push(it); } drag=null; render(); changed();});
+
+render();
+})();
+</script>
+</body></html>
