@@ -1,0 +1,455 @@
+<title>NM-hallen 2026</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Public+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Phone first: day and time, the hall as it stands (5-8 left, 4-1 right) with now and next per ring, and the draw sheet of the tapped ring. */
+:root{
+  --ground:#E7EDF5; --surface:#FFFFFF; --sunken:#DCE4EE; --floor:#F1F5F9;
+  --ink:#0C1B29; --ink-2:#40566B; --ink-3:#6E8399;
+  --rule:#C3D1E0; --rule-soft:#D6E0EC;
+  --navy:#0C1B29; --brand:#2E7EB5;
+  --now:#C8201B; --next:#A8670A;
+  --trib:#F1E3A2; --trib-ink:#6B5A12;
+  --f:#C2187F; --f-soft:#F8D3E9; --m:#0A8A84; --m-soft:#C9EEEA;
+  --belt:#121212; --belt-edge:transparent; --gold:#E8B931;
+  --hl:#FFE066;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --ground:#0A1522; --surface:#16304A; --sunken:#11263B; --floor:#0F2236;
+  --ink:#E8EFF6; --ink-2:#A8BCCE; --ink-3:#7E93A8;
+  --rule:#2D4E70; --rule-soft:#27486A; --brand:#6FB4E2;
+  --now:#FF5A4D; --next:#F0B14A;
+  --trib:#3A3418; --trib-ink:#E3D27E;
+  --f:#F27AC6; --f-soft:#5C1E47; --m:#4FD8CF; --m-soft:#0E4A47; --belt-edge:rgba(255,255,255,.35);
+  --hl:#7A6416;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0A1522; --surface:#16304A; --sunken:#11263B; --floor:#0F2236;
+  --ink:#E8EFF6; --ink-2:#A8BCCE; --ink-3:#7E93A8;
+  --rule:#2D4E70; --rule-soft:#27486A; --brand:#6FB4E2;
+  --now:#FF5A4D; --next:#F0B14A;
+  --trib:#3A3418; --trib-ink:#E3D27E;
+  --f:#F27AC6; --f-soft:#5C1E47; --m:#4FD8CF; --m-soft:#0E4A47; --belt-edge:rgba(255,255,255,.35);
+  --hl:#7A6416;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
+.wrap{max-width:52rem;margin:0 auto;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-block:0 48px;display:grid;gap:14px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+a{color:var(--brand)}
+
+/* sticky time bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--navy);color:#fff;margin-inline:calc(-1*max(12px,env(safe-area-inset-left,0px)));padding:8px max(12px,env(safe-area-inset-left,0px)) 6px;display:grid;gap:6px}
+.bar .row{display:flex;align-items:center;gap:8px}
+.brand{font-family:var(--display);font-weight:800;font-stretch:75%;font-size:1.05rem;letter-spacing:.01em;line-height:1}
+.brand small{display:block;font-family:var(--mono);font-weight:500;font-size:.6rem;letter-spacing:.08em;color:#9FC3E0;text-transform:uppercase}
+.seg{display:inline-flex;border:1px solid #3B5674;border-radius:999px;overflow:hidden;margin-left:auto}
+.seg button{border:0;background:none;color:#CFE0EE;padding:5px 11px;cursor:pointer;font-weight:600;font-size:.85rem}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--navy)}
+.clock{font-family:var(--mono);font-weight:600;font-size:1.3rem;font-variant-numeric:tabular-nums}
+.nowbtn{border:1px solid #3B5674;background:none;color:#fff;border-radius:6px;padding:4px 9px;font-size:.8rem;font-weight:600;cursor:pointer}
+.density{display:flex;align-items:flex-end;height:12px;gap:1px}
+.density i{flex:1;background:#FF6A5E;border-radius:1px 1px 0 0}
+.density i.z{background:#2A4560}
+input[type=range]{width:100%;margin:0;accent-color:#FF6A5E}
+
+/* hall */
+.hall{background:var(--floor);border:2px solid var(--ink-3);border-radius:4px;padding:6px;display:grid;
+  grid-template-columns:12px minmax(0,1fr) 14px minmax(0,1fr) 12px;grid-template-rows:auto repeat(4,auto);gap:6px}
+.screen{grid-column:2/5;justify-self:center;font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);border-bottom:3px solid var(--ink-3);padding:0 14px 1px}
+.trib{grid-row:2/6;background:var(--trib);border-radius:2px}
+.trib.l{grid-column:1}.trib.r{grid-column:5}
+.sek{grid-column:3;grid-row:3/5;align-self:center;writing-mode:vertical-rl;background:var(--brand);color:#fff;font-family:var(--mono);font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;padding:8px 1px;border-radius:2px;justify-self:center}
+.ring{font:inherit;color:inherit;width:100%;text-align:left;background:var(--surface);border:2px solid var(--rule);border-radius:4px;padding:6px 7px 7px;display:grid;gap:3px;align-content:start;min-height:7.6rem;cursor:pointer;min-width:0}
+.ring .top{display:flex;justify-content:space-between;align-items:center}
+.ring .num{font-family:var(--display);font-weight:800;font-stretch:70%;font-size:1.7rem;line-height:.9;color:var(--ink-2)}
+.ring .cnt{font-family:var(--mono);font-size:.78rem;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--now);color:#fff}
+.ring .when{font-family:var(--mono);font-size:.68rem;color:var(--ink-2)}
+.ring .nxt{font-size:.72rem;color:var(--next);font-weight:600}
+.ring .cls{font-size:.86rem;line-height:1.3;overflow-wrap:anywhere}
+.ring.idle{background:var(--sunken)}
+.ring .nx{border-top:1px dashed var(--rule);padding-top:4px;margin-top:2px;display:grid;gap:1px}
+.ring .nx .nl{font-family:var(--mono);font-size:.64rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3)}
+.ring .nx .cls{font-size:.76rem;opacity:.8}
+.tabs{display:inline-flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden}
+.tabs button{border:0;background:none;padding:4px 10px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:var(--mono)}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.ring.sel{outline:3px solid var(--brand);outline-offset:1px}
+
+/* category label */
+.disc{display:inline-block;font-family:var(--mono);font-size:.6rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;line-height:1;padding:3px 5px;border-radius:3px;border:2px solid var(--ink);margin:0 5px 3px 0;vertical-align:1px}
+.disc.sp{background:var(--ink);color:var(--surface)}
+.disc.mo{background:var(--surface);color:var(--ink)}
+.disc.st{background:var(--surface);color:var(--ink);border-style:dashed}
+.disc.kn{background:var(--surface);color:var(--ink);border-style:dotted}
+.cat{font-family:var(--display);font-weight:800;font-stretch:85%;background:var(--m-soft);border-left:5px solid var(--m);padding:1px 5px;border-radius:2px;box-decoration-break:clone;-webkit-box-decoration-break:clone;line-height:1.6}
+.cat.F{background:var(--f-soft);border-left-color:var(--f)}
+.belt{display:inline-flex;align-items:center;justify-content:flex-end;position:relative;min-width:24px;height:11px;padding:0 2px 0 11px;border-radius:2px;background:var(--belt);box-shadow:0 0 0 1px var(--belt-edge);margin-right:5px;vertical-align:-1px}
+.belt.jr::before{content:"";position:absolute;left:0;right:0;top:50%;height:3px;margin-top:-1.5px;background:#fff}
+.belt b{position:relative;background:var(--belt);color:var(--gold);font:800 8px/11px var(--display);padding:0 1px}
+
+/* panel */
+.panel{background:var(--surface);border-radius:6px;padding:12px;display:grid;gap:10px;scroll-margin-top:96px}
+.panel .hd{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.panel .rn{font-family:var(--display);font-weight:800;font-stretch:75%;font-size:1.5rem;line-height:1}
+.panel .tm{font-family:var(--mono);font-size:.78rem;color:var(--ink-2)}
+.panel .x{margin-left:auto;border:0;background:none;font-size:1.3rem;line-height:1;cursor:pointer;color:var(--ink-3);padding:2px 6px}
+.panel .ttl{font-size:1.15rem}
+.people{list-style:none;margin:0;padding:0;display:grid}
+.people li{padding:7px 0;border-top:1px solid var(--rule-soft);display:grid;gap:1px}
+.people b{font-size:.95rem}
+.people b small{font-weight:400;color:var(--ink-3)}
+.people .w{font-size:.84rem;color:var(--ink-2)}
+.as{font-family:var(--mono);font-size:.62rem;color:var(--ink-3);border:1px dashed var(--ink-3);border-radius:3px;padding:0 4px;margin-left:4px}
+.sheet{display:grid;gap:4px}
+.sheet .sc{overflow-x:auto;overflow-y:hidden;border:1px solid var(--rule);border-radius:4px;background:#fff}
+.sheet img{display:block;width:860px;max-width:none;height:auto}
+.sheet.fit img{width:100%}
+.sheet .tools{display:flex;justify-content:space-between;align-items:center;font-size:.76rem;color:var(--ink-3)}
+.sheet .tools button{border:1px solid var(--rule);background:var(--surface);border-radius:5px;padding:3px 8px;font-size:.76rem;font-weight:600;cursor:pointer}
+.hint{font-size:.82rem;color:var(--ink-3);margin:0}
+
+/* plan */
+h2{font-family:var(--display);font-weight:800;font-stretch:85%;font-size:1.15rem;margin:6px 0 0}
+.plan{background:var(--surface);border-radius:6px;overflow:hidden}
+.slot{display:grid;grid-template-columns:3.1rem 2.1rem minmax(0,1fr);gap:8px;padding:9px 10px;border-top:1px solid var(--rule-soft);cursor:pointer;align-items:start}
+.slot:first-child{border-top:0}
+.slot .t{font-family:var(--mono);font-size:.82rem;font-weight:600;font-variant-numeric:tabular-nums}
+.slot .r{font-family:var(--display);font-weight:800;font-stretch:75%;font-size:1.05rem;line-height:1.1}
+.slot .c{min-width:0;font-size:.86rem}
+.slot .nm{display:block;font-size:.78rem;color:var(--ink-2);margin-top:2px}
+.slot.live{box-shadow:inset 4px 0 0 var(--now)}
+.slot.past{opacity:.45}
+.slot.sel{background:var(--sunken)}
+
+/* folded sections */
+details{background:var(--surface);border-radius:6px}
+summary{padding:11px 12px;cursor:pointer;font-family:var(--display);font-weight:800;font-stretch:85%;font-size:1.05rem}
+.fold{padding:0 12px 12px;display:grid;gap:8px}
+.search{width:100%;border:1px solid var(--rule);background:var(--ground);border-radius:6px;padding:7px 10px;font:inherit;color:var(--ink)}
+.prow{padding:8px 0;border-top:1px solid var(--rule-soft);display:grid;gap:3px}
+.prow .st{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-size:.74rem;padding:2px 7px;border-radius:3px;background:var(--sunken);cursor:pointer;border:0;white-space:nowrap}
+.chip.dim{background:none;color:var(--ink-3);font-style:italic;cursor:default}
+.gh{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding-top:6px}
+.key{display:grid;gap:6px;font-size:.84rem;color:var(--ink-2)}
+.key div{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sw{width:14px;height:14px;border-radius:3px;display:inline-block;border:2px solid var(--rule)}
+@media (min-width:700px){
+  .hall{grid-template-columns:28px minmax(0,1fr) 30px minmax(0,1fr) 28px;gap:8px;padding:8px}
+  .ring{min-height:8.6rem;padding:8px 9px}
+  .ring .num{font-size:2rem}
+  .ring .cls{font-size:.95rem}
+}
+@media (prefers-reduced-motion:no-preference){.ring{transition:border-color .2s}}
+.ring .top{display:flex;align-items:center;gap:8px}
+.ring .top .ico{margin-left:auto}
+.ico{width:26px;height:26px;flex:none;fill:none;stroke:var(--ink);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ico.sm{width:17px;height:17px;stroke-width:2.2;opacity:.85}
+.belt{min-width:30px;height:12px;padding:0 3px 0 12px;margin-right:0}
+.belt b{font:800 9px/12px var(--display);letter-spacing:.03em}
+.belt.big{min-width:46px;height:18px;padding:0 4px 0 16px}
+.belt.big b{font-size:13px;line-height:18px;padding:0 2px}
+.belt.big.jr::before{height:4px;margin-top:-2px}
+.ring .cls{font-size:1.12rem;line-height:1.35}
+.ring .when{font-size:.82rem;font-weight:600;color:var(--ink)}
+.ring{min-height:8.4rem}
+@media (max-width:420px){.ring .cls{font-size:1rem}}
+.ring .nrow{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.ring .nrow .cat{font-size:.78rem}
+.panel .ttl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ring.idle .when{font-size:.8rem}
+.ring.quiet{background:var(--sunken)}
+.ring.quiet .cls,.ring.quiet .when,.nx.quiet .nrow .cat{opacity:.38;filter:grayscale(1)}
+.agekey{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.76rem;color:var(--ink-2)}
+.agekey span{display:inline-flex;align-items:center;gap:5px}
+.agekey i{width:18px;height:10px;border-radius:2px;display:inline-block}
+.agekey .r{background:#FF7373}.agekey .y{background:#FFE026}.agekey .g{background:#73D966}.agekey .o{background:#FFA640}.agekey .s{background:#8CBFFF}
+.seg.view{margin-left:0}
+.bar .row{flex-wrap:wrap;row-gap:6px}
+.seg button{padding:5px 9px}
+.dv{overflow:auto;max-height:calc(100dvh - 110px);background:var(--surface);border-radius:6px;--tc:44px}
+.dvg{position:relative;min-width:calc(44px + 8 * 104px)}
+.dvh{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:var(--tc) repeat(8,1fr);height:28px;background:var(--surface);border-bottom:1px solid var(--rule)}
+.dvh span{font-family:var(--display);font-weight:800;font-stretch:75%;font-size:.95rem;display:flex;align-items:center;justify-content:center}
+.dvt{position:absolute;left:0;width:100%;border-top:1px solid var(--rule-soft);font-family:var(--mono);font-size:.62rem;color:var(--ink-3);padding-left:4px}
+.blk{position:absolute;width:calc((100% - var(--tc)) / 8 - 4px);margin-left:2px;border:0;border-left:4px solid var(--m);background:var(--m-soft);border-radius:3px;padding:3px 5px;text-align:left;font:inherit;color:var(--ink);overflow:hidden;cursor:pointer;display:flex;flex-direction:column;gap:2px;align-items:flex-start;z-index:1}
+.blk.F{border-left-color:var(--f);background:var(--f-soft)}
+.blk.N{border-left-color:var(--ink-3);background:var(--sunken)}
+.blk .nm{font-family:var(--display);font-weight:800;font-stretch:85%;font-size:.78rem;line-height:1.15}
+.blk .tt{font-family:var(--mono);font-size:.6rem;color:var(--ink-2)}
+.blk.short{padding:0 4px;flex-direction:row}
+.blk.short .nm{font-size:.6rem;font-weight:600;white-space:nowrap}
+.blk.quiet{background:var(--sunken);border-left-color:var(--rule)}
+.blk.quiet .nm,.blk.quiet .tt{opacity:.45}
+.blk.lunch{background:repeating-linear-gradient(45deg,var(--sunken) 0 6px,transparent 6px 12px);border-left-color:transparent;color:var(--ink-3);font-size:.7rem;cursor:default}
+.panel .sd{font-size:.82rem;font-weight:600;text-decoration:none;border:1px solid var(--rule);border-radius:5px;padding:3px 8px}
+.prog{height:6px;background:var(--rule-soft);border-radius:3px;overflow:hidden;margin-top:2px}
+.prog i{display:block;height:100%;background:var(--ink-2);border-radius:3px}
+.left{font-family:var(--mono);font-size:.74rem;font-weight:600}
+.strip{position:relative;height:14px;background:var(--floor);border:1px solid var(--rule-soft);border-radius:2px;overflow:hidden;margin-top:5px}
+.strip i{position:absolute;top:0;bottom:0;border-right:2px solid var(--surface)}
+.strip i.c.M{background:var(--m)}.strip i.c.F{background:var(--f)}.strip i.c.N{background:var(--ink-3)}
+.strip i.q{background:var(--rule)}
+.strip i.l{background:repeating-linear-gradient(45deg,var(--rule) 0 3px,transparent 3px 6px)}
+.strip .now{position:absolute;left:0;top:0;bottom:0;width:3px;background:#FF6A5E}
+.ticks2{position:relative;height:12px;font-family:var(--mono);font-size:.56rem;color:var(--ink-3)}
+.ticks2 span{position:absolute;transform:translateX(-50%)}
+.faces{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.face{flex:none;width:68px;display:grid;justify-items:center;gap:4px;text-align:center}
+.av{width:56px;height:56px;border-radius:50%;border:4px solid #8CBFFF;background:var(--sunken);display:grid;place-items:center;overflow:hidden}
+.av img{width:100%;height:100%;object-fit:cover}
+.av span{font-family:var(--display);font-weight:800;font-size:1.1rem;color:var(--ink-2)}
+.av.r{border-color:#FF7373}.av.y{border-color:#FFE026}.av.g{border-color:#73D966}.av.o{border-color:#FFA640}
+.fn{font-size:.7rem;line-height:1.2;font-weight:600;overflow-wrap:anywhere}
+.blk .pn{font-size:.72rem;font-weight:600;line-height:1.2;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.blk .pn.r::after,.blk .pn.y::after,.blk .pn.g::after,.blk .pn.o::after{content:"";width:7px;height:7px;border-radius:50%;flex:none;order:2}
+.blk .pn .bn{order:0}
+.blk .pn.r::after{background:#FF5C5C}.blk .pn.y::after{background:#F2C200}.blk .pn.g::after{background:#4CC23F}.blk .pn.o::after{background:#FF9A2E}
+.wt{display:inline-flex;align-items:center;font-style:normal;font-family:var(--display);font-weight:800;font-stretch:85%;font-size:10px;line-height:1;height:13px;padding:0 4px;border-radius:2px;background:var(--ink);color:var(--surface)}
+.wt.big{font-size:14px;height:20px;padding:0 6px;border-radius:3px}
+.ring .top .belt+.wt{margin-left:-2px}
+.blk .bw{display:inline-flex;gap:4px;align-items:center}
+.bn{display:inline-block;min-width:18px;text-align:center;font-family:var(--mono);font-size:.64rem;font-weight:600;line-height:1;padding:2px 3px;border-radius:2px;color:#fff;font-style:normal}
+.bn.r{background:#C8201B}.bn.b{background:#3B4FE0}
+.blk.sel{outline:3px solid var(--brand);outline-offset:0;z-index:2}
+.nowline{position:absolute;left:var(--tc);right:0;height:0;border-top:2px solid #FF6A5E;z-index:3;pointer-events:none}
+.belt.red{background:#C62828}
+.belt.mix{background:linear-gradient(90deg,#C62828 50%,var(--belt) 50%)}
+.cat.N{background:var(--sunken);border-left-color:var(--ink-3)}
+.para{margin-left:auto;font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:2px solid var(--ink);border-radius:3px;padding:2px 4px;line-height:1}
+.para.sm{margin-left:0;font-size:.55rem;padding:1px 3px}
+</style>
+
+<div class="wrap">
+  <header class="bar">
+    <div class="row">
+      <div class="seg view" role="group" aria-label="Visning">
+        <button type="button" data-view="hall" id="v-hall">Hall</button>        <button type="button" data-view="day" id="v-day">Dag</button>
+      </div>
+      <div class="seg" role="group" aria-label="Dag">
+        <button type="button" data-day="sat" id="d-sat">Lør</button>
+        <button type="button" data-day="sun" id="d-sun">Søn</button>
+      </div>
+      <span class="clock" id="clock">08:30</span>
+      <button type="button" class="nowbtn" id="now" hidden>Nå</button>
+    </div>
+    <input type="range" id="t" min="510" max="1015" step="5" value="510" aria-label="Klokkeslett">
+  </header>
+
+  <div class="hall" id="hall" aria-label="Hallkart">
+    <div class="screen">Storskjerm</div>
+    <div class="trib l" title="Tribune"></div>
+    <div class="sek">Sekretariat</div>
+    <div class="trib r" title="VIP og tribune 2"></div>
+  </div>
+
+  <div class="panel" id="panel" hidden></div>
+  <div class="dv" id="day" hidden></div>
+</div>
+
+<script>
+const DATA = {"blocks":[{"d":"sat","r":1,"s":510,"e":560,"cat":"5052","t":"Herre Sr. Mønster 1 Dan","ph":"","n":14},{"d":"sat","r":2,"s":510,"e":605,"cat":"5154","t":"Dame Sr. Mønster 2 Dan","ph":"","n":25},{"d":"sat","r":3,"s":510,"e":550,"cat":"5054","t":"Herre Sr. Mønster 2 Dan","ph":"","n":12},{"d":"sat","r":4,"s":510,"e":585,"cat":"7868","t":"Dame Junior Spes.Tek. 1-3 Dan","ph":"","n":15},{"d":"sat","r":5,"s":510,"e":590,"cat":"7859","t":"Herre Junior Mønster 1 Dan","ph":"Pulje 1 av 2","n":21},{"d":"sat","r":6,"s":510,"e":590,"cat":"7859","t":"Herre Junior Mønster 1 Dan","ph":"Pulje 2 av 2","n":21},{"d":"sat","r":3,"s":550,"e":555,"cat":"5054","t":"Herre Sr. Mønster 2 Dan","ph":"Finale","n":2},{"d":"sat","r":1,"s":565,"e":610,"cat":"5152","t":"Dame Sr. Mønster 1 Dan","ph":"","n":13},{"d":"sat","r":3,"s":565,"e":570,"cat":"5052","t":"Herre Sr. Mønster 1 Dan","ph":"Finale","n":2},{"d":"sat","r":3,"s":575,"e":595,"cat":"7867","t":"Dame Junior Mønster 2-3 Dan","ph":"","n":5},{"d":"sat","r":4,"s":590,"e":655,"cat":"5555","t":"Herre Sr/Veteran Spes.Tek. 1-6 Dan","ph":"","n":13},{"d":"sat","r":5,"s":595,"e":665,"cat":"7866","t":"Dame Junior Mønster 1 Dan","ph":"Pulje 2 av 2","n":18},{"d":"sat","r":6,"s":595,"e":670,"cat":"7866","t":"Dame Junior Mønster 1 Dan","ph":"Pulje 1 av 2","n":19},{"d":"sat","r":3,"s":600,"e":605,"cat":"7859","t":"Herre Junior Mønster 1 Dan","ph":"Finale","n":2},{"d":"sat","r":2,"s":610,"e":625,"cat":"7860","t":"Herre Junior Mønster 2-3 Dan","ph":"","n":3},{"d":"sat","r":3,"s":610,"e":615,"cat":"5154","t":"Dame Sr. Mønster 2 Dan","ph":"Finale","n":2},{"d":"sat","r":1,"s":615,"e":635,"cat":"6367","t":"Herre U21 Mønster 1 Dan","ph":"","n":5},{"d":"sat","r":3,"s":620,"e":625,"cat":"5152","t":"Dame Sr. Mønster 1 Dan","ph":"Finale","n":2},{"d":"sat","r":2,"s":630,"e":650,"cat":"5158","t":"Dame Sr. Mønster 4-6 Dan","ph":"","n":5},{"d":"sat","r":3,"s":630,"e":670,"cat":"5056","t":"Herre Sr. Mønster 3 Dan","ph":"","n":12},{"d":"sat","r":1,"s":640,"e":660,"cat":"6370","t":"Dame U21 Mønster 1-3 Dan","ph":"","n":5},{"d":"sat","r":2,"s":655,"e":680,"cat":"5058","t":"Herre Sr. Mønster 4-6 Dan","ph":"","n":6},{"d":"sat","r":8,"s":655,"e":710,"cat":"7862","t":"Dame Pre-Junior Mønster 1-3 Dan","ph":"","n":14},{"d":"sat","r":1,"s":665,"e":710,"lunch":1},{"d":"sat","r":4,"s":665,"e":720,"cat":"5567","t":"Dame Sr./Veteran Spes.Tek. 1-6 Dan","ph":"","n":11},{"d":"sat","r":3,"s":670,"e":715,"lunch":1},{"d":"sat","r":5,"s":670,"e":725,"cat":"5169","t":"Dame Veteran Mønster 1-2 Dan","ph":"","n":15},{"d":"sat","r":6,"s":675,"e":710,"cat":"5069","t":"Herre Veteran Mønster 1-2 Dan","ph":"","n":9},{"d":"sat","r":2,"s":685,"e":690,"cat":"7866","t":"Dame Junior Mønster 1 Dan","ph":"Finale","n":2},{"d":"sat","r":7,"s":685,"e":730,"lunch":1},{"d":"sat","r":2,"s":690,"e":735,"lunch":1},{"d":"sat","r":1,"s":710,"e":765,"cat":"5325","t":"Herre Sr. Sparring 63-69 kg","ph":"","n":9},{"d":"sat","r":3,"s":715,"e":765,"cat":"5485","t":"Dame Sr. Sparring 55-60 kg","ph":"","n":8},{"d":"sat","r":8,"s":715,"e":730,"cat":"7855","t":"Herre Pre-Junior Mønster 1-3 Dan","ph":"","n":3},{"d":"sat","r":4,"s":730,"e":775,"lunch":1},{"d":"sat","r":5,"s":730,"e":775,"lunch":1},{"d":"sat","r":6,"s":730,"e":775,"lunch":1},{"d":"sat","r":8,"s":730,"e":775,"lunch":1},{"d":"sat","r":2,"s":735,"e":770,"cat":"5156","t":"Dame Sr. Mønster 3 Dan","ph":"","n":10},{"d":"sat","r":3,"s":805,"e":810,"cat":"5056","t":"Herre Sr. Mønster 3 Dan","ph":"Finale","n":2},{"d":"sat","r":2,"s":810,"e":820,"cat":"5485","t":"Dame Sr. Sparring 55-60 kg","ph":"Finale","n":2},{"d":"sat","r":3,"s":820,"e":825,"cat":"5156","t":"Dame Sr. Mønster 3 Dan","ph":"Finale","n":2},{"d":"sat","r":2,"s":825,"e":835,"cat":"5325","t":"Herre Sr. Sparring 63-69 kg","ph":"Finale","n":2},{"d":"sat","r":1,"s":845,"e":880,"cat":"5482","t":"Dame Sr. Sparring -55 kg","ph":"","n":6},{"d":"sat","r":2,"s":845,"e":900,"cat":"5487","t":"Dame Sr. Sparring 65-70 kg","ph":"","n":9},{"d":"sat","r":3,"s":845,"e":880,"cat":"5073","t":"Herre Veteran Mønster 3-6 Dan","ph":"","n":10},{"d":"sat","r":4,"s":855,"e":890,"cat":"7863","t":"Dame Pre-Junior Spes.Tek. 1-3 Dan","ph":"","n":7},{"d":"sat","r":1,"s":880,"e":890,"cat":"5482","t":"Dame Sr. Sparring -55 kg","ph":"Repechage","n":2},{"d":"sat","r":3,"s":885,"e":900,"cat":"5173","t":"Dame Veteran Mønster 3-6 Dan","ph":"","n":4},{"d":"sat","r":1,"s":895,"e":930,"cat":"5486","t":"Dame Sr. Sparring 60-65 kg","ph":"","n":6},{"d":"sat","r":4,"s":895,"e":1005,"cat":"7861","t":"Herre Alle Junior Spes.Tek. 1-3 Dan","ph":"","n":22},{"d":"sat","r":2,"s":900,"e":910,"cat":"5487","t":"Dame Sr. Sparring 65-70 kg","ph":"Finale","n":2},{"d":"sat","r":5,"s":910,"e":985,"cat":"5326","t":"Herre Sr. Sparring 69-75 kg","ph":"","n":11},{"d":"sat","r":2,"s":915,"e":965,"cat":"5329","t":"Herre Sr. Sparring +87 kg","ph":"","n":6},{"d":"sat","r":3,"s":915,"e":925,"cat":"5482","t":"Dame Sr. Sparring -55 kg","ph":"Finale","n":2},{"d":"sat","r":6,"s":920,"e":945,"cat":"5489","t":"Dame Sr. Sparring +75 kg","ph":"","n":5},{"d":"sat","r":1,"s":930,"e":940,"cat":"5486","t":"Dame Sr. Sparring 60-65 kg","ph":"Repechage","n":2},{"d":"sat","r":3,"s":930,"e":985,"cat":"5322","t":"Herre Sr. Sparring -63 kg","ph":"","n":7},{"d":"sat","r":1,"s":945,"e":985,"cat":"5328","t":"Herre Sr. Sparring 81-87 kg","ph":"","n":7},{"d":"sat","r":6,"s":945,"e":955,"cat":"5489","t":"Dame Sr. Sparring +75 kg","ph":"Repechage","n":2},{"d":"sat","r":6,"s":960,"e":995,"cat":"5327","t":"Herre Sr. Sparring 75-81 kg","ph":"","n":6},{"d":"sat","r":2,"s":970,"e":980,"cat":"5486","t":"Dame Sr. Sparring 60-65 kg","ph":"Finale","n":2},{"d":"sat","r":1,"s":985,"e":995,"cat":"5328","t":"Herre Sr. Sparring 81-87 kg","ph":"Repechage","n":2},{"d":"sat","r":2,"s":985,"e":995,"cat":"5328","t":"Herre Sr. Sparring 81-87 kg","ph":"Finale","n":2},{"d":"sat","r":3,"s":990,"e":1000,"cat":"5489","t":"Dame Sr. Sparring +75 kg","ph":"Finale","n":2},{"d":"sat","r":5,"s":990,"e":1000,"cat":"7872","t":"Dame U21 Sparring +65 kg","ph":"","n":2},{"d":"sat","r":6,"s":995,"e":1005,"cat":"5327","t":"Herre Sr. Sparring 75-81 kg","ph":"Repechage","n":2},{"d":"sat","r":2,"s":1005,"e":1015,"cat":"5327","t":"Herre Sr. Sparring 75-81 kg","ph":"Finale","n":2},{"d":"sat","r":3,"s":1005,"e":1015,"cat":"5326","t":"Herre Sr. Sparring 69-75 kg","ph":"Finale","n":2},{"d":"sun","r":1,"s":510,"e":565,"cat":"7817","t":"Herre Junior Sparring -60 kg","ph":"","n":9},{"d":"sun","r":2,"s":510,"e":575,"cat":"7865","t":"Dame Junior Sparring 53-57 kg","ph":"","n":9},{"d":"sun","r":3,"s":510,"e":585,"cat":"7818","t":"Herre Junior Sparring 60-65 kg","ph":"","n":10},{"d":"sun","r":4,"s":510,"e":625,"cat":"5579","t":"Dame Sr./Veteran Knusing 1-6 Dan","ph":"","n":23},{"d":"sun","r":1,"s":570,"e":625,"cat":"7858","t":"Herre Junior Sparring +75 kg","ph":"","n":9},{"d":"sun","r":2,"s":580,"e":590,"cat":"7817","t":"Herre Junior Sparring -60 kg","ph":"Finale","n":2},{"d":"sun","r":3,"s":590,"e":645,"cat":"7848","t":"Dame Junior Sparring 57-61 kg","ph":"","n":8},{"d":"sun","r":2,"s":595,"e":630,"cat":"7849","t":"Dame Junior Sparring 61-65 kg","ph":"","n":6},{"d":"sun","r":1,"s":630,"e":680,"cat":"7857","t":"Herre Junior Sparring 70-75 kg","ph":"","n":8},{"d":"sun","r":2,"s":630,"e":640,"cat":"7849","t":"Dame Junior Sparring 61-65 kg","ph":"Repechage","n":2},{"d":"sun","r":4,"s":640,"e":740,"cat":"5573","t":"Herre Sr./Veteran Knusing 1-6 Dan","ph":"","n":20},{"d":"sun","r":2,"s":645,"e":655,"cat":"7858","t":"Herre Junior Sparring +75 kg","ph":"Finale","n":2},{"d":"sun","r":3,"s":650,"e":660,"cat":"7849","t":"Dame Junior Sparring 61-65 kg","ph":"Finale","n":2},{"d":"sun","r":2,"s":660,"e":700,"cat":"7850","t":"Dame Junior Sparring +65 kg","ph":"","n":5},{"d":"sun","r":3,"s":665,"e":715,"cat":"7864","t":"Dame Junior Sparring -53 kg","ph":"","n":6},{"d":"sun","r":1,"s":685,"e":700,"cat":"7819","t":"Herre Junior Sparring 65-70 kg","ph":"","n":4},{"d":"sun","r":6,"s":690,"e":735,"lunch":1},{"d":"sun","r":5,"s":695,"e":740,"lunch":1},{"d":"sun","r":1,"s":700,"e":710,"cat":"7819","t":"Herre Junior Sparring 65-70 kg","ph":"Repechage","n":2},{"d":"sun","r":2,"s":705,"e":715,"cat":"7857","t":"Herre Junior Sparring 70-75 kg","ph":"Finale","n":2},{"d":"sun","r":8,"s":710,"e":755,"lunch":1},{"d":"sun","r":3,"s":720,"e":730,"cat":"7819","t":"Herre Junior Sparring 65-70 kg","ph":"Finale","n":2},{"d":"sun","r":1,"s":725,"e":770,"lunch":1},{"d":"sun","r":2,"s":725,"e":770,"lunch":1},{"d":"sun","r":7,"s":725,"e":770,"lunch":1},{"d":"sun","r":4,"s":760,"e":805,"lunch":1},{"d":"sun","r":3,"s":785,"e":830,"lunch":1},{"d":"sat","r":7,"s":510,"e":585,"cat":"7838","t":"Dame Pre-Junior Mønster 2-1 Gup","ph":"Pulje 1 av 2","lm":1},{"d":"sat","r":8,"s":510,"e":565,"cat":"7878","t":"Herre Pre-Junior Mønster 2-1 Gup","ph":"Pulje 1 av 2","lm":1},{"d":"sat","r":8,"s":565,"e":620,"cat":"7878","t":"Herre Pre-Junior Mønster 2-1 Gup","ph":"Pulje 2 av 2","lm":1},{"d":"sat","r":7,"s":585,"e":660,"cat":"7838","t":"Dame Pre-Junior Mønster 2-1 Gup","ph":"Pulje 2 av 2","lm":1},{"d":"sat","r":8,"s":620,"e":625,"cat":"7878","t":"Herre Pre-Junior Mønster 2-1 Gup","ph":"Finale","lm":1},{"d":"sat","r":8,"s":630,"e":650,"cat":"5151","t":"Dame Sr. Mønster 2-1 Gup","ph":"","lm":1},{"d":"sat","r":7,"s":660,"e":665,"cat":"7838","t":"Dame Pre-Junior Mønster 2-1 Gup","ph":"Finale","lm":1},{"d":"sat","r":7,"s":670,"e":685,"cat":"5051","t":"Herre Sr. Mønster 2-1 Gup","ph":"","lm":1},{"d":"sat","r":6,"s":715,"e":730,"cat":"5066","t":"Herre Veteran Mønster 2-1 Gup","ph":"","lm":1},{"d":"sat","r":7,"s":730,"e":750,"cat":"7933","t":"Para 1","ph":"","lm":1},{"d":"sat","r":7,"s":755,"e":765,"cat":"7934","t":"Para 2","ph":"","lm":1},{"d":"sat","r":5,"s":845,"e":900,"cat":"7853","t":"Dame Junior Mønster 2-1 Gup","ph":"Pulje 1 av 2","lm":1},{"d":"sat","r":6,"s":845,"e":900,"cat":"7853","t":"Dame Junior Mønster 2-1 Gup","ph":"Pulje 2 av 2","lm":1},{"d":"sat","r":7,"s":845,"e":890,"cat":"7823","t":"Herre Junior Mønster 2-1 Gup","ph":"Pulje 1 av 2","lm":1},{"d":"sat","r":8,"s":845,"e":890,"cat":"7823","t":"Herre Junior Mønster 2-1 Gup","ph":"Pulje 2 av 2","lm":1},{"d":"sat","r":7,"s":895,"e":915,"cat":"5166","t":"Dame Veteran Mønster 2-1 Gup","ph":"","lm":1},{"d":"sat","r":6,"s":905,"e":910,"cat":"7823","t":"Herre Junior Mønster 2-1 Gup","ph":"Finale","lm":1},{"d":"sat","r":8,"s":905,"e":910,"cat":"7853","t":"Dame Junior Mønster 2-1 Gup","ph":"Finale","lm":1},{"d":"sat","r":8,"s":920,"e":925,"cat":"7899","t":"Dame Veteran Sparring 2-1 Gup – 1-6 Dan +74 kg","ph":"","lm":1},{"d":"sat","r":8,"s":930,"e":955,"cat":"7897","t":"Dame Veteran Sparring 2-1 Gup – 1-6 Dan -67 kg","ph":"","lm":1},{"d":"sat","r":8,"s":960,"e":990,"cat":"7886","t":"Herre Veteran Sparring 2-1 Gup – 1-6 Dan +84 kg","ph":"","lm":1},{"d":"sat","r":8,"s":995,"e":1015,"cat":"7885","t":"Herre Veteran Sparring 2-1 Gup – 1-6 Dan 76-84 kg","ph":"","lm":1},{"d":"sun","r":5,"s":510,"e":535,"cat":"7879","t":"Herre Junior Sparring 2-1 Gup -60 kg","ph":"","lm":1},{"d":"sun","r":6,"s":510,"e":560,"cat":"7881","t":"Herre Junior Sparring 2-1 Gup 65-70 kg","ph":"","lm":1},{"d":"sun","r":7,"s":510,"e":535,"cat":"7873","t":"Herre Pre-Junior Sparring 2-1 Gup - 1-3 Dan -50 kg","ph":"","lm":1},{"d":"sun","r":8,"s":510,"e":535,"cat":"7890","t":"Dame Pre-Junior Sparring 2-1 Gup - 1-3 Dan 56-60 kg","ph":"","lm":1},{"d":"sun","r":5,"s":540,"e":565,"cat":"7894","t":"Dame Junior Sparring 2-1 Gup 57-61 kg","ph":"","lm":1},{"d":"sun","r":7,"s":540,"e":565,"cat":"7889","t":"Dame Pre-Junior Sparring 2-1 Gup - 1-3 Dan 52-56 kg","ph":"","lm":1},{"d":"sun","r":8,"s":540,"e":590,"cat":"7876","t":"Herre Pre-Junior Sparring 2-1 Gup - 1-3 Dan 60-65 kg","ph":"","lm":1},{"d":"sun","r":6,"s":565,"e":610,"cat":"7883","t":"Herre Junior Sparring 2-1 Gup +75 kg","ph":"","lm":1},{"d":"sun","r":5,"s":570,"e":595,"cat":"7880","t":"Herre Junior Sparring 2-1 Gup 60-65 kg","ph":"","lm":1},{"d":"sun","r":7,"s":570,"e":615,"cat":"7877","t":"Herre Pre-Junior Sparring 2-1 Gup - 1-3 Dan +65 kg","ph":"","lm":1},{"d":"sun","r":8,"s":595,"e":670,"cat":"7891","t":"Dame Pre-Junior Sparring 2-1 Gup - 1-3 Dan +60 kg","ph":"","lm":1},{"d":"sun","r":5,"s":600,"e":630,"cat":"7892","t":"Dame Junior Sparring 2-1 Gup -53 kg","ph":"","lm":1},{"d":"sun","r":6,"s":615,"e":640,"cat":"7895","t":"Dame Junior Sparring 2-1 Gup 61-65 kg","ph":"","lm":1},{"d":"sun","r":7,"s":620,"e":660,"cat":"7887","t":"Dame Pre-Junior Sparring 2-1 Gup - 1-3 Dan -48 kg","ph":"","lm":1},{"d":"sun","r":5,"s":635,"e":650,"cat":"7893","t":"Dame Junior Sparring 2-1 Gup 53-57 kg","ph":"","lm":1},{"d":"sun","r":6,"s":645,"e":655,"cat":"5321","t":"Herre Sr. Sparring 2-1 Gup +87 kg","ph":"","lm":1},{"d":"sun","r":5,"s":655,"e":675,"cat":"7896","t":"Dame Junior Sparring 2-1 Gup +65 kg","ph":"","lm":1},{"d":"sun","r":6,"s":660,"e":680,"cat":"5474","t":"Dame Sr. Sparring 2-1 Gup -70 kg","ph":"","lm":1},{"d":"sun","r":7,"s":665,"e":695,"cat":"7888","t":"Dame Pre-Junior Sparring 2-1 Gup - 1-3 Dan 48-52 kg","ph":"","lm":1},{"d":"sun","r":8,"s":675,"e":705,"cat":"7875","t":"Herre Pre-Junior Sparring 2-1 Gup - 1-3 Dan 55-60 kg","ph":"","lm":1},{"d":"sun","r":5,"s":680,"e":685,"cat":"5314","t":"Herre Sr. Sparring 2-1 Gup -81 kg","ph":"","lm":1},{"d":"sun","r":7,"s":700,"e":720,"cat":"7874","t":"Herre Pre-Junior Sparring 2-1 Gup - 1-3 Dan 50-55 kg","ph":"","lm":1}],"cands":[{"n":"Tobias Kjølsø","age":"r","st":[{"cat":"7858","ring":null,"bout":1,"cor":"b","a":0},{"cat":"7860","ring":null,"bout":1,"cor":"b","a":0}]},{"n":"Marius Braadland","age":"y","st":[{"cat":"7857","ring":null,"bout":1,"cor":"r","a":0},{"cat":"7859","ring":6,"bout":2,"cor":"r","a":0}]},{"n":"Melvin Rolstad","age":"r","st":[{"cat":"7819","ring":null,"bout":1,"cor":"b","a":0},{"cat":"7859","ring":6,"bout":11,"cor":"r","a":0},{"cat":"7861","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Theodor Kvernberg","age":"y","st":[{"cat":"7818","ring":null,"bout":4,"cor":"r","a":0},{"cat":"7859","ring":6,"bout":3,"cor":"b","a":0}]},{"n":"Teodor Basa","age":"y","st":[{"cat":"7817","ring":null,"bout":1,"cor":"b","a":0},{"cat":"7859","ring":6,"bout":5,"cor":"b","a":0},{"cat":"7861","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Arin Blekastad","age":"r","st":[{"cat":"7817","ring":null,"bout":3,"cor":"b","a":0},{"cat":"7859","ring":5,"bout":12,"cor":"b","a":0},{"cat":"7861","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Clara Fürstenberg","age":"y","st":[{"cat":"7850","ring":null,"bout":1,"cor":"r","a":0},{"cat":"7866","ring":6,"bout":9,"cor":"r","a":0},{"cat":"7868","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Panthea Valdez Ytternes","age":"r","st":[{"cat":"7849","ring":null,"bout":3,"cor":"b","a":0},{"cat":"7866","ring":5,"bout":1,"cor":"b","a":0},{"cat":"7868","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Veronika Mosand","age":"y","st":[{"cat":"7865","ring":null,"bout":5,"cor":"r","a":0},{"cat":"7866","ring":5,"bout":5,"cor":"r","a":0}]},{"n":"Ebba Østensen Gjelstad","age":"y","st":[{"cat":"7850","ring":null,"bout":3,"cor":"r","a":0},{"cat":"7866","ring":6,"bout":4,"cor":"b","a":0},{"cat":"7868","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Maria Eide","age":"r","st":[{"cat":"7866","ring":5,"bout":6,"cor":"b","a":0}]},{"n":"Lycke Marie Selvik","age":"y","st":[{"cat":"7864","ring":null,"bout":3,"cor":"b","a":0},{"cat":"7866","ring":6,"bout":5,"cor":"b","a":0},{"cat":"7868","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Mia Løvdal-Bakken","age":"","st":[{"cat":"7864","ring":null,"bout":4,"cor":"b","a":0},{"cat":"7866","ring":5,"bout":8,"cor":"b","a":0}]},{"n":"Fredrik Bergersen Moen","age":"r","st":[{"cat":"7858","ring":null,"bout":3,"cor":"b","a":0},{"cat":"7859","ring":5,"bout":8,"cor":"b","a":0},{"cat":"7861","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Eliva Pedersen","age":"y","st":[{"cat":"7865","ring":null,"bout":3,"cor":"b","a":0},{"cat":"7866","ring":6,"bout":10,"cor":"b","a":0}]},{"n":"Marie Irgens-Hansen","age":"g","st":[{"cat":"7862","ring":null,"bout":1,"cor":"r","a":0},{"cat":"7863","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Olivia Ahmed","age":"g","st":[{"cat":"7862","ring":null,"bout":3,"cor":"b","a":0},{"cat":"7863","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Anja Abilgos Brustad","age":"r","st":[{"cat":"7848","ring":null,"bout":3,"cor":"r","a":0},{"cat":"7866","ring":6,"bout":2,"cor":"r","a":0}]},{"n":"Markus Kristiansen","age":"","st":[{"cat":"7818","ring":null,"bout":3,"cor":"b","a":0},{"cat":"7859","ring":5,"bout":10,"cor":"b","a":0},{"cat":"7861","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Theo Kulvik","age":"","st":[{"cat":"7859","ring":5,"bout":2,"cor":"b","a":0},{"cat":"7861","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Joudi Kolko","age":"","st":[{"cat":"7864","ring":null,"bout":1,"cor":"b","a":0},{"cat":"7866","ring":5,"bout":5,"cor":"b","a":0}]},{"n":"Sigve Gjerdsbakk","age":"o","st":[{"cat":"7818","ring":null,"bout":1,"cor":"b","a":0}]},{"n":"Linnea Løve","age":"","st":[{"cat":"7849","ring":null,"bout":4,"cor":"b","a":0},{"cat":"7867","ring":null,"bout":1,"cor":"r","a":0},{"cat":"7868","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Camilla Stranden","age":"","st":[{"cat":"7865","ring":null,"bout":2,"cor":"b","a":0},{"cat":"7866","ring":5,"bout":3,"cor":"b","a":0},{"cat":"7868","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Elisa Nordmo Johnsen","age":"","st":[{"cat":"7866","ring":6,"bout":9,"cor":"b","a":0}]},{"n":"Mille Birkeland","age":"r","st":[{"cat":"7848","ring":null,"bout":2,"cor":"b","a":0},{"cat":"7866","ring":6,"bout":7,"cor":"b","a":0}]},{"n":"Fredrik Jonathan Marjoni","age":"","st":[{"cat":"5052","ring":null,"bout":10,"cor":"b","a":0}]},{"n":"Egor Valkov","age":"","st":[{"cat":"5326","ring":null,"bout":7,"cor":"b","a":0},{"cat":"5555","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Gabriel Einmo","age":"","st":[{"cat":"5325","ring":null,"bout":3,"cor":"b","a":0},{"cat":"5052","ring":null,"bout":5,"cor":"b","a":0}]},{"n":"Mats Lind","age":"","st":[{"cat":"5322","ring":null,"bout":3,"cor":"r","a":0},{"cat":"5054","ring":null,"bout":8,"cor":"b","a":0}]},{"n":"Lars Tønder","age":"","st":[{"cat":"5326","ring":null,"bout":6,"cor":"b","a":0},{"cat":"5058","ring":null,"bout":2,"cor":"r","a":0}]},{"n":"Theo Loodtz","age":"","st":[{"cat":"5327","ring":null,"bout":1,"cor":"r","a":0},{"cat":"5058","ring":null,"bout":3,"cor":"b","a":0},{"cat":"5555","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Tor Kristian Kyrkjeeide","age":"","st":[{"cat":"5327","ring":null,"bout":1,"cor":"b","a":0},{"cat":"5052","ring":null,"bout":3,"cor":"r","a":0}]},{"n":"Emil Kristensen","age":"","st":[{"cat":"5325","ring":null,"bout":1,"cor":"r","a":0},{"cat":"5056","ring":null,"bout":3,"cor":"r","a":0},{"cat":"5573","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Ingebrigt Steinkjer","age":"","st":[{"cat":"5326","ring":null,"bout":2,"cor":"b","a":0},{"cat":"5056","ring":null,"bout":4,"cor":"b","a":0},{"cat":"5555","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Martin Berg","age":"","st":[{"cat":"5058","ring":null,"bout":4,"cor":"b","a":0}]},{"n":"William Løve","age":"","st":[{"cat":"5322","ring":null,"bout":1,"cor":"b","a":0},{"cat":"5054","ring":null,"bout":1,"cor":"b","a":0},{"cat":"5573","ring":null,"bout":null,"cor":null,"a":0},{"cat":"5555","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Simen Selvik","age":"","st":[{"cat":"5328","ring":null,"bout":2,"cor":"b","a":0},{"cat":"5056","ring":null,"bout":2,"cor":"r","a":0},{"cat":"5573","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Zaniar Kiyani","age":"","st":[{"cat":"5054","ring":null,"bout":2,"cor":"r","a":0}]},{"n":"Josefine Breivik","age":"","st":[{"cat":"5154","ring":null,"bout":14,"cor":"b","a":0}]},{"n":"Ann Linnea Hole","age":"","st":[{"cat":"5486","ring":null,"bout":1,"cor":"r","a":0},{"cat":"5156","ring":null,"bout":5,"cor":"b","a":0}]},{"n":"Rita Sivertsvik","age":"","st":[{"cat":"5485","ring":null,"bout":4,"cor":"r","a":0},{"cat":"5158","ring":null,"bout":2,"cor":"b","a":0},{"cat":"5579","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Marte Blegen","age":"","st":[{"cat":"5486","ring":null,"bout":2,"cor":"r","a":0},{"cat":"5154","ring":null,"bout":5,"cor":"r","a":0},{"cat":"5579","ring":null,"bout":null,"cor":null,"a":0},{"cat":"5567","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Natalija Gajinov","age":"","st":[{"cat":"5485","ring":null,"bout":1,"cor":"b","a":0},{"cat":"5154","ring":null,"bout":12,"cor":"b","a":0},{"cat":"5579","ring":null,"bout":null,"cor":null,"a":0},{"cat":"5567","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Selma Li","age":"","st":[{"cat":"5482","ring":null,"bout":3,"cor":"b","a":0},{"cat":"5156","ring":null,"bout":1,"cor":"r","a":0}]},{"n":"Lone Jenstad","age":"","st":[{"cat":"5154","ring":null,"bout":7,"cor":"r","a":0}]},{"n":"Solveig Haukebø","age":"","st":[{"cat":"5156","ring":null,"bout":2,"cor":"r","a":0}]},{"n":"Alba Rolstad","age":"","st":[{"cat":"5486","ring":null,"bout":2,"cor":"b","a":0},{"cat":"5154","ring":null,"bout":11,"cor":"b","a":0},{"cat":"5579","ring":null,"bout":null,"cor":null,"a":0},{"cat":"5567","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Heidi Fiske","age":"","st":[{"cat":"5482","ring":null,"bout":1,"cor":"b","a":0},{"cat":"5154","ring":null,"bout":6,"cor":"r","a":0}]},{"n":"Conrad Leren Hamang","age":"","st":[{"cat":"5322","ring":null,"bout":2,"cor":"b","a":0}]},{"n":"Daniel Hassanipour","age":"","st":[{"cat":"5325","ring":null,"bout":5,"cor":"b","a":0},{"cat":"5056","ring":null,"bout":2,"cor":"b","a":0},{"cat":"5555","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Eirik Høyland Nordal","age":"","st":[{"cat":"5326","ring":null,"bout":2,"cor":"r","a":0}]},{"n":"Trygve Aakvik","age":"","st":[{"cat":"5326","ring":null,"bout":7,"cor":"r","a":0},{"cat":"5555","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Marius Iversen","age":"","st":[{"cat":"5329","ring":null,"bout":3,"cor":"b","a":0},{"cat":"5056","ring":null,"bout":6,"cor":"b","a":0}]},{"n":"David Stige","age":"","st":[{"cat":"5328","ring":null,"bout":5,"cor":"b","a":0},{"cat":"5056","ring":null,"bout":5,"cor":"b","a":0},{"cat":"5573","ring":null,"bout":null,"cor":null,"a":0},{"cat":"5555","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Daniil Valkov","age":"","st":[{"cat":"5325","ring":null,"bout":1,"cor":"b","a":0},{"cat":"5052","ring":null,"bout":1,"cor":"r","a":0}]},{"n":"Sondre Høyland Nordal","age":"","st":[{"cat":"5325","ring":null,"bout":5,"cor":"r","a":0},{"cat":"5054","ring":null,"bout":4,"cor":"r","a":0},{"cat":"5555","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Thomas Heyeraas","age":"","st":[{"cat":"5326","ring":null,"bout":3,"cor":"b","a":0},{"cat":"5054","ring":null,"bout":7,"cor":"b","a":0},{"cat":"5573","ring":null,"bout":null,"cor":null,"a":0},{"cat":"5555","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Anfeldt Kvarsnes","age":"","st":[{"cat":"5328","ring":null,"bout":3,"cor":"b","a":0},{"cat":"5054","ring":null,"bout":2,"cor":"b","a":0},{"cat":"5573","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Julian Melkvik","age":"","st":[{"cat":"5328","ring":null,"bout":1,"cor":"b","a":0},{"cat":"5054","ring":null,"bout":4,"cor":"b","a":0},{"cat":"5573","ring":null,"bout":null,"cor":null,"a":0},{"cat":"5555","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Marcus Vollan","age":"","st":[{"cat":"5325","ring":null,"bout":3,"cor":"r","a":0},{"cat":"5054","ring":null,"bout":3,"cor":"b","a":0}]},{"n":"Karl-Henrik Wevang","age":"","st":[{"cat":"5326","ring":null,"bout":5,"cor":"b","a":0}]},{"n":"Daniel Paradina","age":"","st":[{"cat":"5326","ring":null,"bout":4,"cor":"b","a":0},{"cat":"5052","ring":null,"bout":6,"cor":"r","a":0}]},{"n":"Vegard Cornell","age":"","st":[{"cat":"5327","ring":null,"bout":4,"cor":"b","a":0}]},{"n":"Stine Iversen","age":"","st":[{"cat":"5485","ring":null,"bout":4,"cor":"b","a":0},{"cat":"5158","ring":null,"bout":1,"cor":"r","a":0}]},{"n":"Jenny Listhaug","age":"","st":[{"cat":"5487","ring":null,"bout":5,"cor":"b","a":0},{"cat":"5156","ring":null,"bout":6,"cor":"b","a":0},{"cat":"5579","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Matilde Børresen","age":"","st":[{"cat":"5482","ring":null,"bout":2,"cor":"r","a":0},{"cat":"5154","ring":null,"bout":8,"cor":"b","a":0}]},{"n":"Mina Rui","age":"","st":[{"cat":"5485","ring":null,"bout":2,"cor":"b","a":0},{"cat":"5154","ring":null,"bout":1,"cor":"b","a":0}]},{"n":"Luna Ayala-Trujillo","age":"","st":[{"cat":"5486","ring":null,"bout":3,"cor":"b","a":0},{"cat":"5154","ring":null,"bout":17,"cor":"b","a":0},{"cat":"5567","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Nanna Medin","age":"","st":[{"cat":"5489","ring":null,"bout":2,"cor":"b","a":0},{"cat":"5158","ring":null,"bout":1,"cor":"b","a":0},{"cat":"5579","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Anastasia Sandstå","age":"","st":[{"cat":"5487","ring":null,"bout":4,"cor":"b","a":0},{"cat":"5154","ring":null,"bout":16,"cor":"b","a":0}]},{"n":"Thalia Stendal","age":"","st":[{"cat":"5487","ring":null,"bout":1,"cor":"r","a":0},{"cat":"5154","ring":null,"bout":9,"cor":"b","a":0},{"cat":"5579","ring":null,"bout":null,"cor":null,"a":0},{"cat":"5567","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Stian Wighus","age":"","st":[{"cat":"5056","ring":null,"bout":1,"cor":"b","a":0},{"cat":"5573","ring":null,"bout":null,"cor":null,"a":0}]},{"n":"Kristian Forfot Gjersvold","age":"","st":[{"cat":"5327","ring":null,"bout":3,"cor":"b","a":0},{"cat":"5058","ring":null,"bout":1,"cor":"b","a":0}]},{"n":"Magnus Haukås","age":"","st":[{"cat":"7817","ring":null,"bout":1,"cor":"r","a":0},{"cat":"7859","ring":5,"bout":5,"cor":"b","a":0}]},{"n":"Nicolai Thancke Larsen","age":"","st":[{"cat":"7859","ring":5,"bout":13,"cor":"b","a":0}]},{"n":"Sindre Skille Amundsen","age":"","st":[{"cat":"7818","ring":null,"bout":1,"cor":"r","a":0},{"cat":"7859","ring":6,"bout":13,"cor":"b","a":0}]},{"n":"Fredrik Øxseth Ski","age":"","st":[{"cat":"5052","ring":null,"bout":6,"cor":"b","a":0}]},{"n":"Marielle Lind","age":"","st":[{"cat":"5158","ring":null,"bout":3,"cor":"b","a":0}]},{"n":"Lena Vanvik Feragen","age":"","st":[{"cat":"7865","ring":null,"bout":4,"cor":"r","a":0},{"cat":"7866","ring":6,"bout":11,"cor":"b","a":0}]},{"n":"Mathea Tessem Størseth","age":"","st":[{"cat":"7848","ring":null,"bout":3,"cor":"b","a":0},{"cat":"7866","ring":6,"bout":5,"cor":"r","a":0}]},{"n":"Jitte Eisma","age":"","st":[{"cat":"5152","ring":null,"bout":9,"cor":"b","a":0}]},{"n":"Mobina Rezai","age":"","st":[{"cat":"5482","ring":null,"bout":2,"cor":"b","a":0},{"cat":"5152","ring":null,"bout":5,"cor":"r","a":0}]},{"n":"Mina Bratterud Hansen","age":"","st":[{"cat":"5489","ring":null,"bout":3,"cor":"r","a":0},{"cat":"5154","ring":null,"bout":4,"cor":"r","a":0}]},{"n":"Annabel Heltne","age":"","st":[{"cat":"5154","ring":null,"bout":7,"cor":"b","a":0},{"cat":"5567","ring":null,"bout":null,"cor":null,"a":1}]},{"n":"Emilie Viig Østensen","age":"","st":[{"cat":"5154","ring":null,"bout":2,"cor":"r","a":0}]},{"n":"Daniela Trujillo","age":"","st":[{"cat":"5482","ring":null,"bout":1,"cor":"r","a":0},{"cat":"5154","ring":null,"bout":9,"cor":"r","a":0}]},{"n":"Sajane Karina Olsen","age":"","st":[{"cat":"5482","ring":null,"bout":4,"cor":"b","a":0},{"cat":"5154","ring":null,"bout":13,"cor":"b","a":0}]},{"n":"Kevin Andreassen","age":"","st":[{"cat":"5329","ring":null,"bout":2,"cor":"b","a":0},{"cat":"5052","ring":null,"bout":1,"cor":"b","a":0},{"cat":"5555","ring":null,"bout":null,"cor":null,"a":1}]},{"n":"Lucas Kalsås-Carlsen","age":"r","st":[{"cat":"7818","ring":null,"bout":5,"cor":"b","a":0},{"cat":"7860","ring":null,"bout":1,"cor":"r","a":0}]},{"n":"Håvard Kirkeby","age":"y","st":[{"cat":"7817","ring":null,"bout":2,"cor":"b","a":0},{"cat":"7859","ring":5,"bout":3,"cor":"r","a":0},{"cat":"7861","ring":null,"bout":null,"cor":null,"a":1}]},{"n":"Marius Anderssen","age":"r","st":[{"cat":"7818","ring":null,"bout":4,"cor":"b","a":0},{"cat":"7859","ring":5,"bout":1,"cor":"b","a":0}]},{"n":"Sofie Lauridsen","age":"y","st":[{"cat":"7848","ring":null,"bout":4,"cor":"b","a":0},{"cat":"7866","ring":6,"bout":6,"cor":"b","a":0}]},{"n":"Henrik Mathias Eriksson","age":"y","st":[{"cat":"7818","ring":null,"bout":6,"cor":"b","a":0},{"cat":"7859","ring":6,"bout":9,"cor":"b","a":0}]},{"n":"Anne Jørpeland Øygaren","age":"","st":[{"cat":"7862","ring":null,"bout":6,"cor":"b","a":0},{"cat":"7868","ring":null,"bout":null,"cor":null,"a":1}]},{"n":"Inga Steingård","age":"r","st":[{"cat":"7865","ring":null,"bout":3,"cor":"r","a":0},{"cat":"7866","ring":5,"bout":9,"cor":"r","a":0}]},{"n":"Wilhelm Tonholm Hansen","age":"y","st":[{"cat":"7861","ring":null,"bout":null,"cor":null,"a":1}]},{"n":"Dawid Pajewski","age":"y","st":[{"cat":"7858","ring":null,"bout":2,"cor":"b","a":0},{"cat":"7859","ring":5,"bout":1,"cor":"r","a":0}]},{"n":"Emilie Dahl","age":"g","st":[{"cat":"7862","ring":null,"bout":3,"cor":"r","a":0}]},{"n":"Linnea Tessem Størseth","age":"g","st":[{"cat":"7862","ring":null,"bout":8,"cor":"b","a":0},{"cat":"7868","ring":null,"bout":null,"cor":null,"a":1}]},{"n":"Even Marius Hammer","age":"","st":[{"cat":"7861","ring":null,"bout":null,"cor":null,"a":1}]}],"sheets":{"0":{"f":"ark/p00.jpg","cat":"7855","ring":8,"pool":"1/1","w":1657,"h":475},"1":{"f":"ark/p01.jpg","cat":"7817","ring":1,"pool":"1/1","w":1657,"h":1121},"2":{"f":"ark/p02.jpg","cat":"7818","ring":3,"pool":"1/1","w":1657,"h":1121},"3":{"f":"ark/p03.jpg","cat":"7819","ring":1,"pool":"1/1","w":1657,"h":1044},"4":{"f":"ark/p04.jpg","cat":"7857","ring":1,"pool":"1/1","w":1657,"h":1121},"5":{"f":"ark/p05.jpg","cat":"7858","ring":1,"pool":"1/1","w":1657,"h":1121},"6":{"f":"ark/p06.jpg","cat":"7859","ring":5,"pool":"1/2","w":1657,"h":1170},"7":{"f":"ark/p07.jpg","cat":"7859","ring":6,"pool":"2/2","w":1657,"h":1170},"8":{"f":"ark/p08.jpg","cat":"7860","ring":2,"pool":"1/1","w":1657,"h":475},"9":{"f":"ark/p09.jpg","cat":"5322","ring":3,"pool":"1/1","w":1657,"h":1044},"10":{"f":"ark/p10.jpg","cat":"5325","ring":1,"pool":"1/1","w":1657,"h":1121},"11":{"f":"ark/p11.jpg","cat":"5326","ring":5,"pool":"1/1","w":1657,"h":1121},"12":{"f":"ark/p12.jpg","cat":"5327","ring":6,"pool":"1/1","w":1657,"h":1044},"13":{"f":"ark/p13.jpg","cat":"5328","ring":1,"pool":"1/1","w":1657,"h":1044},"14":{"f":"ark/p14.jpg","cat":"5329","ring":2,"pool":"1/1","w":1657,"h":1044},"15":{"f":"ark/p15.jpg","cat":"5052","ring":1,"pool":"1/1","w":1657,"h":1121},"16":{"f":"ark/p16.jpg","cat":"5054","ring":3,"pool":"1/1","w":1657,"h":1121},"17":{"f":"ark/p17.jpg","cat":"5056","ring":3,"pool":"1/1","w":1657,"h":1121},"18":{"f":"ark/p18.jpg","cat":"5058","ring":2,"pool":"1/1","w":1657,"h":1044},"19":{"f":"ark/p19.jpg","cat":"5069","ring":6,"pool":"1/1","w":1657,"h":1121},"20":{"f":"ark/p20.jpg","cat":"5073","ring":3,"pool":"1/1","w":1657,"h":1121},"21":{"f":"ark/p21.jpg","cat":"7862","ring":8,"pool":"1/1","w":1657,"h":1121},"22":{"f":"ark/p22.jpg","cat":"7864","ring":3,"pool":"1/1","w":1657,"h":1044},"23":{"f":"ark/p23.jpg","cat":"7865","ring":2,"pool":"1/1","w":1657,"h":1121},"24":{"f":"ark/p24.jpg","cat":"7848","ring":3,"pool":"1/1","w":1657,"h":1121},"25":{"f":"ark/p25.jpg","cat":"7849","ring":2,"pool":"1/1","w":1657,"h":1044},"26":{"f":"ark/p26.jpg","cat":"7850","ring":2,"pool":"1/1","w":1657,"h":1044},"27":{"f":"ark/p27.jpg","cat":"7866","ring":6,"pool":"1/2","w":1657,"h":1170},"28":{"f":"ark/p28.jpg","cat":"7866","ring":5,"pool":"2/2","w":1657,"h":1170},"29":{"f":"ark/p29.jpg","cat":"7867","ring":3,"pool":"1/1","w":1657,"h":1044},"30":{"f":"ark/p30.jpg","cat":"5482","ring":1,"pool":"1/1","w":1657,"h":1044},"31":{"f":"ark/p31.jpg","cat":"5485","ring":3,"pool":"1/1","w":1657,"h":1121},"32":{"f":"ark/p32.jpg","cat":"5486","ring":1,"pool":"1/1","w":1657,"h":1044},"33":{"f":"ark/p33.jpg","cat":"5487","ring":2,"pool":"1/1","w":1657,"h":1121},"34":{"f":"ark/p34.jpg","cat":"5489","ring":6,"pool":"1/1","w":1657,"h":1044},"35":{"f":"ark/p35.jpg","cat":"5152","ring":1,"pool":"1/1","w":1657,"h":1121},"36":{"f":"ark/p36.jpg","cat":"5154","ring":2,"pool":"1/1","w":1657,"h":1170},"37":{"f":"ark/p37.jpg","cat":"5156","ring":2,"pool":"1/1","w":1657,"h":1121},"38":{"f":"ark/p38.jpg","cat":"5158","ring":2,"pool":"1/1","w":1657,"h":1044},"39":{"f":"ark/p39.jpg","cat":"5169","ring":5,"pool":"1/1","w":1657,"h":1121},"40":{"f":"ark/p40.jpg","cat":"5173","ring":3,"pool":"1/1","w":1657,"h":1044},"41":{"f":"ark/p41.jpg","cat":"6367","ring":1,"pool":"1/1","w":1657,"h":1044},"42":{"f":"ark/p42.jpg","cat":"7872","ring":5,"pool":"1/1","w":1657,"h":908},"43":{"f":"ark/p43.jpg","cat":"6370","ring":1,"pool":"1/1","w":1657,"h":1044}},"catpages":{"7855":[0],"7817":[1],"7818":[2],"7819":[3],"7857":[4],"7858":[5],"7859":[6,7],"7860":[8],"5322":[9],"5325":[10],"5326":[11],"5327":[12],"5328":[13],"5329":[14],"5052":[15],"5054":[16],"5056":[17],"5058":[18],"5069":[19],"5073":[20],"7862":[21],"7864":[22],"7865":[23],"7848":[24],"7849":[25],"7850":[26],"7866":[27,28],"7867":[29],"5482":[30],"5485":[31],"5486":[32],"5487":[33],"5489":[34],"5152":[35],"5154":[36],"5156":[37],"5158":[38],"5169":[39],"5173":[40],"6367":[41],"7872":[42],"6370":[43]}};
+const POS = {5:[2,2],6:[2,3],7:[2,4],8:[2,5],4:[4,2],3:[4,3],2:[4,4],1:[4,5]};
+const hm = m => String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $ = id => document.getElementById(id);
+const store = {get(k,d){try{const v=localStorage.getItem('nm26.'+k);return v==null?d:JSON.parse(v)}catch{return d}},set(k,v){try{localStorage.setItem('nm26.'+k,JSON.stringify(v))}catch{}}};
+const blocks = DATA.blocks, sheets = DATA.sheets, catpages = DATA.catpages;
+const S = {day:store.get('day','sat'), t:store.get('t',510), ring:null, view:store.get('view','hall'), fit:store.get('fit',false)};
+if (S.view !== 'day') S.view = 'hall';
+
+const final = b => b.ph === 'Finale' || b.ph === 'Repechage';
+const current = (d,r,t) => blocks.find(b => b.d===d && b.r===r && b.s<=t && t<b.e);
+const nextOf = (d,r,t) => blocks.filter(b => b.d===d && b.r===r && b.cat && b.s>t).sort((a,b)=>a.s-b.s)[0];
+// split pools put each athlete in one ring; finals gather the class wherever it is held
+const who = b => !b || !b.cat ? [] : DATA.cands.filter(c => c.st.some(x => x.cat===b.cat && (final(b) || x.ring==null || x.ring===b.r)));
+const has = b => who(b).length > 0;
+const PHOTOS = DATA.photos || {};
+function faces(b){
+  const list = who(b);
+  if (!list.length) return '';
+  return `<div class="faces">${list.map(c => {
+    const parts = c.n.split(' '), ini = (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+    const img = PHOTOS[c.n] ? `<img src="${PHOTOS[c.n]}" alt="">` : `<span>${ini}</span>`;
+    return `<div class="face"><div class="av ${c.age || 's'}">${img}</div><div class="fn">${esc(parts[0])}<br>${esc(parts.slice(1).join(' '))}</div></div>`;
+  }).join('')}</div>`;
+}
+
+const ICON = {
+  mo: ['Mønster', '<circle cx="8" cy="4" r="2"/><path d="M8 6.5 9 13M8.5 8.5H18M8.5 8.5 4.5 11.5M9 13 4 20.5M9 13l6 7.5"/>'],
+  sp: ['Sparring', '<circle cx="5.5" cy="4.5" r="2"/><circle cx="18.5" cy="4.5" r="2"/><path d="M5.5 7v6.5M5.5 9.5l5.5-1M5.5 13.5 3 20.5M5.5 13.5l2.5 7M18.5 7v6.5M18.5 9.5 13 11M18.5 13.5 16 20.5M18.5 13.5l2.5 7"/>'],
+  st: ['Spesialteknikk', '<circle cx="5" cy="4" r="2"/><path d="M5.5 6.5 8 12.5M8 12.5 21 5M8 12.5 6 20.5M6.5 8.5 2.5 11"/>'],
+  kn: ['Knusing', '<path d="M2 15h8l2 3 2-3h8M2 19h8l2-1 2 1h8"/><path d="M9 4h6v6H9zM12 10v3"/>'],
+};
+const R6 = ['','I','II','III','IV','V','VI'];
+function info(t){
+  const k = /^Para/.test(t)?'pa':/Sparring/.test(t)?'sp':/Mønster/.test(t)?'mo':/Knusing/.test(t)?'kn':'st';
+  const g = /^Dame/.test(t) ? 'F' : /^Herre/.test(t) ? 'M' : 'N', jr = /Junior/.test(t);
+  // red belts (LM) are 2.-1. gup; some sparring classes mix them with black belts
+  const gup = /Gup/.test(t), mix = gup && /Dan/.test(t);
+  const m = gup || k==='sp' || / 1-6 Dan/.test(t) ? null : t.match(/(\d)(?:-(\d))? Dan/);
+  // juniors top out at 2. Dan and seniors at 4. Dan, so "2-3" is II for juniors and "4-6" is IV for seniors
+  const lo = m ? +m[1] : 0, hi = m ? Math.min(+(m[2] || m[1]), jr ? 2 : 4) : 0;
+  // a range of grades gets a plain belt; only a single grade gets its numeral
+  const dan = m && hi === lo ? R6[lo] : '', plain = !!m && hi > lo;
+  const name = t.replace(/Spes\.Tek\./, 'Spes.tek.')
+    .replace(/\s*2-1 Gup(\s*[-–]\s*1-\d Dan)?/, '').replace(/\s*\d(-\d)? Dan\b/, '')
+    .replace(/\b\d+-(\d+) kg/, '-$1 kg').replace(/\s+/g,' ').trim();
+  const w = k === 'sp' ? (name.match(/([-+]\d+) kg/) || [])[1] || '' : '';
+  return {k, g, jr, dan, plain, name: w ? name.replace(/\s*[-+]\d+ kg/, '') : name, gup, mix, w};
+}
+// in sparring the weight class is what tells classes apart, so it gets the same prominence as a belt
+const weight = (i, cls='') => i.w ? `<i class="wt ${cls}">${i.w}</i>` : '';
+const icon = () => '';
+// sparring is open to every Dan grade, so a black-belt sparring class gets no belt
+function belt(i, cls=''){
+  if (i.mix) return `<i class="belt mix ${cls}" title="Rødt og svart belte"></i>`;
+  if (i.gup) return `<i class="belt red ${cls}" title="Rødt belte (2.–1. gup)"></i>`;
+  if (i.dan) return `<i class="belt ${cls}${i.jr?' jr':''}" title="${i.jr?'Junior':'Senior'}, ${i.dan} Dan"><b>${i.dan}</b></i>`;
+  return i.plain ? `<i class="belt ${cls}${i.jr?' jr':''}" title="${i.jr?'Junior':'Senior'}"></i>` : '';
+}
+const nameTag = i => `<span class="cat ${i.g}">${esc(i.name)}</span>`;
+
+const WIN = 120; // minutes ahead shown in each ring's strip
+const dur = m => m >= 60 ? `${Math.floor(m/60)} t ${String(m%60).padStart(2,'0')}` : `${m} min`;
+function timeCard(r, b, bi){
+  let h = '';
+  if (bi){
+    const pct = Math.round((S.t - b.s) / (b.e - b.s) * 100);
+    h += `<div class="cls">${nameTag(bi)}</div>${b.ph?`<div class="when">${esc(b.ph)}</div>`:''}`
+       + `<div class="prog"><i style="width:${pct}%"></i></div><div class="left">${dur(b.e - S.t)} igjen</div>`;
+  } else {
+    h += `<div class="when">${b && b.lunch ? 'Lunsj · '+dur(b.e - S.t)+' igjen' : 'Ledig'}</div>`;
+  }
+  const t0 = S.t, t1 = S.t + WIN;
+  const segs = blocks.filter(x => x.d===S.day && x.r===r && x.e > t0 && x.s < t1).map(x => {
+    const a = Math.max(x.s, t0), z = Math.min(x.e, t1), left = (a - t0) / WIN * 100, w = (z - a) / WIN * 100;
+    const cls = x.lunch ? 'l' : has(x) ? 'c ' + info(x.t).g : 'q';
+    return `<i class="${cls}" style="left:${left}%;width:${w}%" title="${x.lunch ? 'Lunsj' : esc(x.t)} ${hm(x.s)}"></i>`;
+  }).join('');
+  let ticks = '';
+  for (let m = Math.ceil(t0 / 60) * 60; m <= t1; m += 60) if (m > t0) ticks += `<span style="left:${(m - t0) / WIN * 100}%">${String(m/60).padStart(2,'0')}</span>`;
+  return h + `<div class="strip">${segs}<b class="now"></b></div><div class="ticks2">${ticks}</div>`;
+}
+
+function renderHall(){
+  const hall = $('hall');
+  hall.querySelectorAll('.ring').forEach(e => e.remove());
+  for (let r=1;r<=8;r++){
+    const b = current(S.day, r, S.t);
+    const bi = b && b.cat ? info(b.t) : null;
+    let body = `<div class="top"><span class="num">${r}</span>${bi ? belt(bi,'big') + weight(bi,'big') : ''}${bi ? icon(bi.k) : ''}</div>`;
+    if (bi) body += `<div class="cls">${nameTag(bi)}</div><div class="when">${b.ph?esc(b.ph)+' · ':''}${hm(b.s)}–${hm(b.e)}</div>`;
+    else body += `<div class="when">${b && b.lunch ? 'Lunsj til '+hm(b.e) : 'Ledig'}</div>`;
+    const el = document.createElement('button');
+    el.type = 'button'; el.className = 'ring' + (bi ? (has(b) ? '' : ' quiet') : ' idle') + (S.ring===r ? ' sel' : '');
+    el.style.gridColumn = POS[r][0]; el.style.gridRow = POS[r][1];
+    el.setAttribute('aria-label', `Ring ${r}`);
+    el.innerHTML = body;
+    el.onclick = () => {
+      S.ring = S.ring===r || !bi ? null : r;
+      render();
+      if (S.ring) $('panel').scrollIntoView({behavior:'smooth', block:'start'});
+    };
+    hall.appendChild(el);
+  }
+}
+
+// a class split into pools has one sheet per ring; finals show every sheet of the class
+function sheetsFor(b){
+  const pgs = (catpages[b.cat]||[]).map(i => sheets[i]);
+  return pgs.length > 1 && !final(b) ? pgs.filter(s => s.ring === b.r) : pgs;
+}
+
+function renderPanel(){
+  const p = $('panel');
+  const b = S.view === 'day' ? S.dsel : (S.ring ? current(S.day, S.ring, S.t) : null); // hall and hall2 share the ring choice
+  if (!b || !b.cat){ p.hidden = true; return; }
+  const r = b.r;
+  const i = info(b.t), sh = sheetsFor(b);
+  p.hidden = false;
+  // technique events (special technique, breaking) are scored, so Sportdata shows them on a points page
+  const act = i.k === 'st' || i.k === 'kn' ? 'auslosungcatpunkte' : 'auslosungcat_check';
+  const draw = `https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=${act}&catid=${b.cat}&verid=${b.lm ? 1123 : 1122}`;
+  const head = `<span class="tm">${hm(b.s)}–${hm(b.e)}</span><a class="sd" href="${draw}" target="_blank" rel="noopener">Sportdata ↗</a>`;
+  p.innerHTML = `<div class="hd"><span class="rn">Ring ${r}</span>${head}<button type="button" class="x" id="x" aria-label="Lukk">×</button></div>
+    <div class="ttl">${icon(i.k)}${belt(i,'big')}${weight(i,'big')}${nameTag(i)}${b.ph?` <span class="tm">${esc(b.ph)}</span>`:''}</div>
+    ${faces(b)}
+    ${sh.length ? sh.map(s => `<div class="sheet${S.fit?' fit':''}"><div class="tools"><span>${s.pool!=='1/1'?'Pulje '+s.pool.replace('/',' av '):'Trekning'}</span><button type="button" class="zoom">${S.fit?'Zoom inn':'Hele arket'}</button></div><div class="sc"><img src="${s.f}" alt="Trekningsark" width="${s.w}" height="${s.h}" loading="lazy"></div></div>`).join('') : '<p class="hint">Ingen trekningsark for denne klassen.</p>'}
+    ${sh.length && has(b) ? '<div class="agekey"><span><i class="r"></i>siste juniorår</span><span><i class="y"></i>ett år til</span><span><i class="g"></i>to år til</span><span><i class="o"></i>blir senior</span><span><i class="s"></i>senior</span></div>' : ''}`;
+  $('x').onclick = () => { if (S.view === 'day') S.dsel = null; else S.ring = null; render(); };
+  p.querySelectorAll('.zoom').forEach(z => z.onclick = () => { S.fit = !S.fit; store.set('fit', S.fit); renderPanel(); });
+}
+
+const DAY0 = 510, PPM = 2.4; // minutes from 08:30, pixels per minute
+// first name and surname initial keep a column narrow enough for eight rings on a phone
+// a split class has one sheet per ring, so take the start that belongs to this ring
+const startIn = (c, b) => c.st.find(x => x.cat===b.cat && (x.ring==null || x.ring===b.r));
+const people = b => who(b).map(c => ({c, s: startIn(c, b) || {}}))
+  .sort((p, q) => (p.s.bout || 999) - (q.s.bout || 999) || (p.s.cor === 'r' ? -1 : 1))
+  .map(({c, s}) => {
+    const p = c.n.split(' ');
+    const no = s.bout ? `<b class="bn ${s.cor}">${s.bout}</b>` : '';
+    return `<span class="pn${c.age ? ' '+c.age : ''}">${no}${esc(p[0])} ${esc(p[p.length-1][0])}.</span>`;
+  }).join('');
+function renderDay(){
+  const dv = $('day'), list = blocks.filter(b => b.d===S.day);
+  const end = Math.max(...list.map(b => b.e)) + 10;
+  let h = `<div class="dvg" style="height:${(end-DAY0)*PPM+30}px">`;
+  h += `<div class="dvh"><span></span>${[1,2,3,4,5,6,7,8].map(r=>`<span>Ring ${r}</span>`).join('')}</div>`;
+  for (let m = DAY0; m <= end; m += 30) h += `<div class="dvt" style="top:${(m-DAY0)*PPM+30}px">${hm(m)}</div>`;
+  for (const b of list){
+    const top = (b.s-DAY0)*PPM+30, ht = Math.max(12,(b.e-b.s)*PPM-2), left = `calc(var(--tc) + (100% - var(--tc)) / 8 * ${b.r-1})`;
+    if (b.lunch){ h += `<div class="blk lunch" style="top:${top}px;height:${ht}px;left:${left}">Lunsj</div>`; continue; }
+    const i = info(b.t), q = !has(b), short = (b.e-b.s) < 15;
+    h += `<button type="button" class="blk ${i.g}${q?' quiet':''}${short?' short':''}" data-d="${b.d}" data-s="${b.s}" data-r="${b.r}" style="top:${top}px;height:${ht}px;left:${left}">`
+      + (short ? (b.ph ? `<span class="tt">${esc(b.ph)}</span>` : '') : `<span class="bw">${belt(i)}${weight(i)}</span>${people(b)}`)
+      + `</button>`;
+  }
+  h += `<div class="nowline" style="top:${(S.t-DAY0)*PPM+30}px"></div></div>`;
+  dv.innerHTML = h;
+  dv.querySelectorAll('.blk[data-s]').forEach(e => {
+    const b = list.find(x => x.r === +e.dataset.r && x.s === +e.dataset.s && x.cat);
+    if (b === S.dsel) e.classList.add('sel');
+    e.onclick = () => {
+      S.dsel = S.dsel === b ? null : b; renderDay(); renderPanel();
+      if (S.dsel) $('panel').scrollIntoView({behavior:'smooth', block:'start'});
+    };
+  });
+}
+
+function eventDay(){ const d=new Date(), k=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(); return k===20261107?'sat':k===20261108?'sun':null; }
+function goNow(){ const d=eventDay(); if(!d) return; const n=new Date(); S.day=d; S.t=Math.round((n.getHours()*60+n.getMinutes())/5)*5; render(); }
+
+function render(){
+  S.t = Math.max(510, Math.min(1015, S.t));
+  $('t').value = S.t; $('clock').textContent = hm(S.t);
+  document.querySelectorAll('[data-day]').forEach(b => b.setAttribute('aria-pressed', b.dataset.day===S.day));
+  document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view===S.view));
+  const dayView = S.view === 'day';
+  $('hall').hidden = dayView; $('day').hidden = !dayView; $('t').hidden = dayView;
+  if (S.dsel && S.dsel.d !== S.day) S.dsel = null;
+  $('panel').style.order = dayView ? 2 : 0; $('day').style.order = dayView ? 1 : 0;
+  if (dayView) renderDay(); else renderHall();
+  renderPanel();
+  store.set('day', S.day); store.set('t', S.t); store.set('view', S.view);
+}
+document.querySelectorAll('[data-day]').forEach(b => b.onclick = () => { S.day = b.dataset.day; S.ring = null; render(); });
+document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => {
+  S.view = b.dataset.view; render();
+  // open the day view at the chosen time rather than at 08:30
+  if (S.view === 'day') $('day').scrollTop = Math.max(0, (S.t-DAY0)*PPM - 120);
+});
+$('t').oninput = e => { S.t = +e.target.value; render(); };
+if (eventDay()){ $('now').hidden = false; $('now').onclick = goNow; goNow(); }
+render();
+</script>
