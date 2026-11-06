@@ -781,7 +781,7 @@ async function selSet(k, n, v){
   await fetch(`${SEL_DB}/uttak/s/${id}.json`, {method: 'PUT', body: JSON.stringify(await enc({k: key, v, t: Date.now()}))}).catch(() => { SEL.err = 'Lagring feilet, prøv igjen'; selRefresh(); });
 }
 
-const codeForm = () => `<form class="codeform"><input type="password" name="code" placeholder="Trenerkode" autocomplete="current-password" aria-label="Trenerkode"><button type="submit">Lås opp uttak</button>${SEL.err ? `<span class="err">${esc(SEL.err)}</span>` : ''}</form>`;
+const codeForm = () => `<p class="hint">Uttaket vises bare når siden er åpnet med trenerlenken.${SEL.err ? ` <b class="over">${esc(SEL.err)}</b>` : ''}</p>`;
 const seg3 = (k, n) => { const v = selGet(k, n); return `<div class="seg3">${[['ute','Ute'],['aktuell','Aktuell'],['uttatt','Tatt ut']].map(([val, lab]) => `<button type="button" data-selk="${esc(k)}" data-seln="${esc(n)}" data-selv="${val}" aria-pressed="${v === val}">${lab}</button>`).join('')}</div>`; };
 function selProfile(n){
   const cs = catsOf(n); if (!cs.length) return '';
@@ -817,10 +817,16 @@ document.addEventListener('submit', e => {
 
 // every visit starts live; scrolling back in time is a deliberate, temporary look
 goLive();
-if (!SEL_DB) selConnect(''); else if (lsGet('nm26.code', '')) selConnect(lsGet('nm26.code', ''));
+// the coaches' link carries the code in the hash (#uttak-<code>); it is remembered and then removed from the address bar
+{
+  const m = location.hash.match(/^#uttak-(.+)$/);
+  if (m) { lsSet('nm26.code', decodeURIComponent(m[1])); try { history.replaceState(history.state, '', location.pathname + location.search); } catch {} }
+}
+const startCode = DATA.selcode || lsGet('nm26.code', '');
+if (!SEL_DB) selConnect(''); else if (startCode) selConnect(startCode);
 setInterval(tick, 30000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 </script>
 
-<script id="buildcheck">(function(){var B="00c0387aab";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
+<script id="buildcheck">(function(){var B="de52662c6d";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
 </html>
