@@ -233,6 +233,9 @@ body.ovopen{overflow:hidden}
 .ovb .pl{font-size:.8rem;color:var(--ink-2);font-family:var(--mono)}
 .nowbtn{font-family:var(--mono);letter-spacing:.04em;white-space:nowrap}
 .nowbtn.on{background:#FF6A5E;border-color:#FF6A5E;color:#fff}
+.ring{position:relative;overflow:hidden}
+.ring .rest{position:absolute;left:0;bottom:0;height:3px;background:var(--ink-3);opacity:.7;border-radius:0 2px 0 0;transition:width .6s}
+.ring.quiet .rest{opacity:.35}
 .blk.sel{outline:3px solid var(--brand);outline-offset:0;z-index:2}
 .nowline{position:absolute;left:var(--tc);right:0;height:0;border-top:2px solid #FF6A5E;z-index:3;pointer-events:none}
 .belt.red{background:#C62828}
@@ -367,6 +370,8 @@ function renderHall(){
     el.type = 'button'; el.className = 'ring' + (bi ? (has(b) ? '' : ' quiet') : ' idle') + (S.ring===r ? ' sel' : '');
     el.style.gridColumn = POS[r][0]; el.style.gridRow = POS[r][1];
     el.setAttribute('aria-label', `Ring ${r}`);
+    // remaining share of the class: full when it starts, empty when it ends
+    if (bi) body += `<i class="rest" style="width:${Math.max(0, Math.min(100, (b.e - S.t) / (b.e - b.s) * 100)).toFixed(1)}%"></i>`;
     el.innerHTML = body;
     el.onclick = () => {
       S.ring = S.ring===r || !bi ? null : r;
@@ -504,5 +509,5 @@ setInterval(tick, 30000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 </script>
 
-<script id="buildcheck">(function(){var B="fda2e7bbd6";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
+<script id="buildcheck">(function(){var B="cc2e034b0f";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
 </html>
