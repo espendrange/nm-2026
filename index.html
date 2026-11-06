@@ -231,6 +231,8 @@ body.ovopen{overflow:hidden}
 .ovh .x{margin-left:auto;border:0;background:none;color:#fff;font-size:1.9rem;line-height:1;padding:0 4px 2px;cursor:pointer}
 .ovb{display:grid;gap:12px;padding:12px max(12px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 24px) max(12px,env(safe-area-inset-left,0px))}
 .ovb .pl{font-size:.8rem;color:var(--ink-2);font-family:var(--mono)}
+.nowbtn{font-family:var(--mono);letter-spacing:.04em;white-space:nowrap}
+.nowbtn.on{background:#FF6A5E;border-color:#FF6A5E;color:#fff}
 .blk.sel{outline:3px solid var(--brand);outline-offset:0;z-index:2}
 .nowline{position:absolute;left:var(--tc);right:0;height:0;border-top:2px solid #FF6A5E;z-index:3;pointer-events:none}
 .belt.red{background:#C62828}
@@ -447,8 +449,32 @@ function renderDay(){
   });
 }
 
-function eventDay(){ const d=new Date(), k=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(); return k===20261107?'sat':k===20261108?'sun':null; }
-function goNow(){ const d=eventDay(); if(!d) return; const n=new Date(); S.day=d; S.t=Math.round((n.getHours()*60+n.getMinutes())/5)*5; render(); }
+// live follows the wall clock; before the event it uses Saturday so the mode can be tried out, after it Sunday
+function liveNow(){
+  const d = new Date(), k = d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate();
+  return {day: k >= 20261108 ? 'sun' : 'sat', t: Math.max(510, Math.min(1015, d.getHours()*60 + d.getMinutes()))};
+}
+function liveBtn(){
+  const b = $('now'); b.hidden = false;
+  b.classList.toggle('on', S.live); b.setAttribute('aria-pressed', S.live);
+  b.textContent = S.live ? '● LIVE' : '↺ Live';
+  b.title = S.live ? 'Følger klokka' : 'Tilbake til nå';
+}
+function goLive(){
+  S.live = true; Object.assign(S, liveNow()); render();
+  if (S.view === 'day') $('day').scrollTop = Math.max(0, (S.t-DAY0)*PPM - 120);
+}
+function leaveLive(){ if (S.live){ S.live = false; liveBtn(); } }
+// a tick redraws the overview only, so an open draw sheet does not flicker while it is being read
+function tick(){
+  if (!S.live) return;
+  const n = liveNow();
+  if (n.day === S.day && n.t === S.t) return;
+  Object.assign(S, n);
+  $('t').value = S.t; $('clock').textContent = hm(S.t);
+  document.querySelectorAll('[data-day]').forEach(b => b.setAttribute('aria-pressed', b.dataset.day===S.day));
+  if (S.view === 'day') renderDay(); else renderHall();
+}
 
 function render(){
   S.t = Math.max(510, Math.min(1015, S.t));
@@ -461,18 +487,22 @@ function render(){
   $('panel').style.order = dayView ? 2 : 0; $('day').style.order = dayView ? 1 : 0;
   if (dayView) renderDay(); else renderHall();
   renderPanel();
+  liveBtn();
   store.set('day', S.day); store.set('t', S.t); store.set('view', S.view);
 }
-document.querySelectorAll('[data-day]').forEach(b => b.onclick = () => { S.day = b.dataset.day; S.ring = null; render(); });
+document.querySelectorAll('[data-day]').forEach(b => b.onclick = () => { leaveLive(); S.day = b.dataset.day; S.ring = null; render(); });
 document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => {
   S.view = b.dataset.view; render();
   // open the day view at the chosen time rather than at 08:30
   if (S.view === 'day') $('day').scrollTop = Math.max(0, (S.t-DAY0)*PPM - 120);
 });
-$('t').oninput = e => { S.t = +e.target.value; render(); };
-if (eventDay()){ $('now').hidden = false; $('now').onclick = goNow; goNow(); }
-render();
+$('t').oninput = e => { leaveLive(); S.t = +e.target.value; render(); };
+$('now').onclick = goLive;
+// every visit starts live; scrolling back in time is a deliberate, temporary look
+goLive();
+setInterval(tick, 30000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 </script>
 
-<script id="buildcheck">(function(){var B="16ba565aaa";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
+<script id="buildcheck">(function(){var B="fda2e7bbd6";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
 </html>
