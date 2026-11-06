@@ -240,6 +240,15 @@ body.ovopen{overflow:hidden}
 .nowbtn .off{font-size:.72rem;opacity:.85;margin-left:4px}
 .ring .who{display:flex;flex-direction:column;gap:3px;margin-top:2px}
 .ring .who .pn{font-size:.8rem}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:25;display:flex;gap:10px;justify-content:center;padding:14px max(12px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 12px) max(12px,env(safe-area-inset-left,0px));background:linear-gradient(transparent,var(--ground) 45%);pointer-events:none}
+.dock .nowbtn{pointer-events:auto;font-size:1rem;padding:11px 20px;border-radius:999px;background:var(--navy);border:1px solid #3B5674;color:#fff;box-shadow:0 4px 14px -6px rgba(0,0,0,.5)}
+.dock .nowbtn.on{background:#FF6A5E;border-color:#FF6A5E}
+.dock .nowbtn:disabled{opacity:.45}
+.wrap{padding-bottom:96px}
+.ring.starting{border-color:var(--brand);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 35%,transparent)}
+.blk.starting{box-shadow:0 0 0 2px var(--brand);z-index:2}
+@media (prefers-reduced-motion:no-preference){.ring.starting,.blk.starting{animation:startglow 1.2s ease-out 1}}
+@keyframes startglow{0%{box-shadow:0 0 0 0 var(--brand)}40%{box-shadow:0 0 0 7px color-mix(in srgb,var(--brand) 45%,transparent)}100%{box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 35%,transparent)}}
 .blk.sel{outline:3px solid var(--brand);outline-offset:0;z-index:2}
 .nowline{position:absolute;left:var(--tc);right:0;height:0;border-top:2px solid #FF6A5E;z-index:3;pointer-events:none}
 .belt.red{background:#C62828}
@@ -261,8 +270,6 @@ body.ovopen{overflow:hidden}
       </div>
       <button type="button" class="nowbtn tog" id="names" aria-pressed="false" title="Vis kandidatnavn i ringene">Navn</button>
       <span class="clock" id="clock">08:30</span>
-      <button type="button" class="nowbtn" id="next" title="Hopp til neste klassestart">Neste ›</button>
-      <button type="button" class="nowbtn" id="now" hidden>Nå</button>
     </div>
     <input type="range" id="t" min="510" max="1015" step="5" value="510" aria-label="Klokkeslett">
   </header>
@@ -273,6 +280,10 @@ body.ovopen{overflow:hidden}
     <div class="trib r" title="VIP og tribune 2"></div>
   </div>
 
+  <nav class="dock" aria-label="Tid">
+    <button type="button" class="nowbtn" id="next" title="Hopp til neste klassestart">Neste ›</button>
+    <button type="button" class="nowbtn" id="now" hidden>Nå</button>
+  </nav>
   <div class="panel" id="panel" hidden></div>
   <div class="dv" id="day" hidden></div>
 </div>
@@ -373,7 +384,8 @@ function renderHall(){
     else if (bi) body += `<div class="cls">${nameTag(bi)}</div><div class="when">${b.ph?esc(b.ph)+' · ':''}${hm(b.s)}–${hm(b.e)}</div>`;
     else body += `<div class="when">${b && b.lunch ? 'Lunsj til '+hm(b.e) : 'Ledig'}</div>`;
     const el = document.createElement('button');
-    el.type = 'button'; el.className = 'ring' + (bi ? (has(b) ? '' : ' quiet') : ' idle') + (S.ring===r ? ' sel' : '');
+    // a class starting at the shown time is marked, so after Neste it is clear which ring changed
+    el.type = 'button'; el.className = 'ring' + (bi ? (has(b) ? '' : ' quiet') : ' idle') + (S.ring===r ? ' sel' : '') + (bi && b.s === S.t ? ' starting' : '');
     el.style.gridColumn = POS[r][0]; el.style.gridRow = POS[r][1];
     el.setAttribute('aria-label', `Ring ${r}`);
     // remaining share of the class: full when it starts, empty when it ends
@@ -445,7 +457,7 @@ function renderDay(){
     const top = (b.s-DAY0)*PPM+30, ht = Math.max(12,(b.e-b.s)*PPM-2), left = `calc(var(--tc) + (100% - var(--tc)) / 8 * ${b.r-1})`;
     if (b.lunch){ h += `<div class="blk lunch" style="top:${top}px;height:${ht}px;left:${left}">Lunsj</div>`; continue; }
     const i = info(b.t), q = !has(b), short = (b.e-b.s) < 15;
-    h += `<button type="button" class="blk ${i.g}${q?' quiet':''}${short?' short':''}" data-d="${b.d}" data-s="${b.s}" data-r="${b.r}" style="top:${top}px;height:${ht}px;left:${left}">`
+    h += `<button type="button" class="blk ${i.g}${q?' quiet':''}${short?' short':''}${b.s===S.t?' starting':''}" data-d="${b.d}" data-s="${b.s}" data-r="${b.r}" style="top:${top}px;height:${ht}px;left:${left}">`
       + (short ? (b.ph ? `<span class="tt">${esc(b.ph)}</span>` : '') : `<span class="bw">${belt(i)}${weight(i)}</span>${people(b)}`)
       + `</button>`;
   }
@@ -536,5 +548,5 @@ setInterval(tick, 30000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 </script>
 
-<script id="buildcheck">(function(){var B="9599bbc2e7";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
+<script id="buildcheck">(function(){var B="b62031f7b3";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
 </html>
