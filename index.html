@@ -335,6 +335,23 @@ button,.ring,.blk,input[type=range]{touch-action:manipulation}
 .urow .un img,.urow .un .noimg{width:30px;height:30px;border-radius:50%;object-fit:cover;flex:none;background:var(--sunken);display:block}
 .urow .seg3 button{padding:6px 2px;font-size:.74rem}
 @media (max-width:420px){.urow{grid-template-columns:1fr}}
+.ucount{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ucount div{background:var(--surface);border-radius:8px;padding:10px;display:grid;justify-items:center}
+.ucount b{font-family:var(--display);font-weight:800;font-size:1.8rem;line-height:1}
+.ucount span{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--ink-3)}
+.uh{gap:8px}
+.uh b{flex:1}
+.padd{width:34px;height:34px;border-radius:50%;border:0;background:var(--brand);color:#fff;font-size:1.3rem;font-weight:700;line-height:1;cursor:pointer;flex:none}
+.padd.on{background:var(--ink-3)}
+.unpick{width:32px;height:32px;border-radius:50%;border:1px solid var(--rule);background:none;color:var(--ink-2);font-size:1.2rem;line-height:1;cursor:pointer;justify-self:end}
+.urow{grid-template-columns:minmax(0,1fr) auto}
+.picker{display:grid;gap:6px;padding:10px 12px;background:var(--sunken)}
+.pickn{display:flex;align-items:center;gap:8px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;font:inherit;font-size:.88rem;font-weight:600;text-align:left;cursor:pointer}
+.pickn.ute{opacity:.45}
+.pickn img,.pickn .noimg{width:28px;height:28px;border-radius:50%;object-fit:cover;background:var(--ground);display:block;flex:none}
+.pickform{display:flex;gap:6px}
+.pickform input{flex:1;min-width:0;font:inherit;padding:7px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--surface);color:var(--ink)}
+.pickform button{font:inherit;font-weight:700;padding:7px 12px;border-radius:8px;border:0;background:var(--brand);color:#fff;cursor:pointer}
 .blk.sel{outline:3px solid var(--brand);outline-offset:0;z-index:2}
 .nowline{position:absolute;left:var(--tc);right:0;height:0;border-top:2px solid #FF6A5E;z-index:3;pointer-events:none}
 .belt.red{background:#C62828}
@@ -568,7 +585,8 @@ const DAY0 = 510, PPM = 2.4; // minutes from 08:30, pixels per minute
 // first name and surname initial keep a column narrow enough for eight rings on a phone
 // a split class has one sheet per ring, so take the start that belongs to this ring
 const startIn = (c, b) => c.st.find(x => x.cat===b.cat && (x.ring==null || x.ring===b.r));
-const people = b => who(b).map(c => ({c, s: startIn(c, b) || {}}))
+// someone the coaches have ruled out no longer takes up room in the overview
+const people = b => who(b).filter(c => selOverall(c.n) !== 'ute').map(c => ({c, s: startIn(c, b) || {}}))
   .sort((p, q) => (p.s.bout || 999) - (q.s.bout || 999) || (p.s.cor === 'r' ? -1 : 1))
   .map(({c, s}) => {
     const p = c.n.split(' ');
@@ -694,7 +712,7 @@ const catsOf = n => CATS.filter(c => c.x.includes(n));
 const SEL = {s: {}, key: null, code: '', ok: false, err: '', live: false, raw: {}};
 const selKey = (k, n) => k + '|' + n;
 const selGet = (k, n) => SEL.s[selKey(k, n)] || 'aktuell';
-const selCount = c => c.x.filter(n => selGet(c.k, n) === 'uttatt').length;
+const selCount = c => picked(c).length;
 function selOverall(n){
   if (!SEL.ok) return '';
   const cs = catsOf(n); if (!cs.length) return '';
@@ -786,26 +804,53 @@ const seg3 = (k, n) => { const v = selGet(k, n); return `<div class="seg3">${[['
 function selProfile(n){
   const cs = catsOf(n); if (!cs.length) return '';
   if (!SEL.ok) return `<div class="selbox"><h3 class="mh">Uttak</h3>${codeForm()}</div>`;
-  return `<div class="selbox"><h3 class="mh">Uttak</h3>${cs.map(c => { const k = selCount(c); return `<div class="selrow"><div class="sl"><b>${esc(catLabel(c))}</b><span class="${k > 2 ? 'over' : ''}">Tatt ut ${k}/2</span></div>${seg3(c.k, n)}</div>`; }).join('')}</div>`;
+  return `<div class="selbox"><h3 class="mh">Uttak</h3>${cs.map(c => { const k = selCount(c); return `<div class="selrow"><div class="sl"><b>${esc(catLabel(c))}</b><span>Tatt ut: ${k}</span></div>${seg3(c.k, n)}</div>`; }).join('')}</div>`;
 }
+// everyone picked in a category, including free-text names that are not on our candidate list
+function picked(c){
+  const pre = c.k + '|';
+  return Object.entries(SEL.s).filter(([k, v]) => v === 'uttatt' && k.startsWith(pre)).map(([k]) => k.slice(pre.length));
+}
+// people, not places: someone picked in two categories counts once
+const pickedIn = g => new Set(CATS.filter(c => !g || c.g === g).flatMap(picked));
 function renderUttak(){
   const el = $('uttak');
   const status = !SEL_DB ? '<p class="selnote">Ikke koblet til delt lagring ennå. Valgene lagres bare på denne enheten.</p>'
     : !SEL.ok ? `<div class="selnote">${codeForm()}</div>`
-    : `<p class="selnote ${SEL.live ? 'on' : ''}">${SEL.live ? '● Delt live med de andre trenerne' : 'Kobler til …'}${SEL.err ? ' · ' + esc(SEL.err) : ''}</p>`;
+    : `<p class="selnote ${SEL.live ? 'on' : ''}">${SEL.live ? '● Delt live' : 'Kobler til …'}${SEL.err ? ' · ' + esc(SEL.err) : ''}</p>`;
   let h = status;
-  if (SEL.ok) for (const g of ['SENIOR', 'JUNIOR']) {
-    h += `<h2 class="ug">${g}</h2>`;
-    for (const c of CATS.filter(c => c.g === g)) {
-      const k = selCount(c), order = {uttatt: 0, aktuell: 1, ute: 2};
-      const xs = [...c.x].sort((a, b) => order[selGet(c.k, a)] - order[selGet(c.k, b)]);
-      h += `<section class="ucat ${c.kind}"><div class="uh"><b>${esc(catLabel(c))}</b><span class="cnt${k > 2 ? ' over' : k === 2 ? ' full' : ''}">${k}/2</span></div>`
-        + xs.map(n => { const v = selGet(c.k, n); return `<div class="urow ${v}"><span class="un">${PHOTOS[n] ? `<img src="${PHOTOS[n]}" alt="" loading="lazy">` : '<i class="noimg"></i>'}${v === 'uttatt' ? '<i class="okm">✓</i>' : ''}${esc(n)}</span>${seg3(c.k, n)}</div>`; }).join('')
-        + `</section>`;
+  if (SEL.ok) {
+    h += `<div class="ucount"><div><b>${pickedIn('SENIOR').size}</b><span>SR</span></div><div><b>${pickedIn('JUNIOR').size}</b><span>JR</span></div><div><b>${pickedIn('').size}</b><span>Totalt</span></div></div>`;
+    const groups = S.grp === 'JR' ? ['JUNIOR'] : S.grp === 'SR' ? ['SENIOR'] : ['SENIOR', 'JUNIOR'];
+    for (const g of groups) {
+      h += `<h2 class="ug">${g}</h2>`;
+      for (const c of CATS.filter(c => c.g === g)) {
+        const ps = picked(c), open = S.pick === c.k;
+        h += `<section class="ucat ${c.kind}"><div class="uh"><b>${esc(catLabel(c))}</b><span class="cnt">${ps.length || ''}</span><button type="button" class="padd${open ? ' on' : ''}" data-pick="${esc(c.k)}" aria-label="Velg utøver i ${esc(catLabel(c))}">${open ? '–' : '+'}</button></div>`
+          + ps.map(n => `<div class="urow"><span class="un">${PHOTOS[n] ? `<img src="${PHOTOS[n]}" alt="" loading="lazy">` : '<i class="noimg"></i>'}${esc(n)}</span><button type="button" class="unpick" data-unk="${esc(c.k)}" data-unn="${esc(n)}" aria-label="Fjern ${esc(n)}">×</button></div>`).join('');
+        if (open) {
+          const rest = c.x.filter(n => !ps.includes(n));
+          h += `<div class="picker">${rest.map(n => `<button type="button" class="pickn${selOverall(n) === 'ute' ? ' ute' : ''}" data-addk="${esc(c.k)}" data-addn="${esc(n)}">${PHOTOS[n] ? `<img src="${PHOTOS[n]}" alt="" loading="lazy">` : '<i class="noimg"></i>'}${esc(n)}</button>`).join('')}
+            <form class="pickform" data-k="${esc(c.k)}"><input name="n" placeholder="Annet navn …" aria-label="Annet navn" autocomplete="off"><button type="submit">Legg til</button></form></div>`;
+        }
+        h += `</section>`;
+      }
     }
   }
   el.innerHTML = h;
 }
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-pick],[data-unk],[data-addk]'); if (!t) return;
+  e.stopPropagation();
+  if (t.dataset.pick != null) { S.pick = S.pick === t.dataset.pick ? null : t.dataset.pick; renderUttak(); }
+  else if (t.dataset.unk != null) selSet(t.dataset.unk, t.dataset.unn, 'aktuell');
+  else { selSet(t.dataset.addk, t.dataset.addn, 'uttatt'); S.pick = null; }
+});
+document.addEventListener('submit', e => {
+  const f = e.target.closest('.pickform'); if (!f) return;
+  e.preventDefault(); const n = f.n.value.trim(); if (!n) return;
+  S.pick = null; selSet(f.dataset.k, n, 'uttatt');
+});
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-selv]'); if (!b) return;
   e.stopPropagation(); selSet(b.dataset.selk, b.dataset.seln, b.dataset.selv);
@@ -828,5 +873,5 @@ setInterval(tick, 30000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 </script>
 
-<script id="buildcheck">(function(){var B="25bfeb8a9c";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
+<script id="buildcheck">(function(){var B="06fcdbbe1b";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
 </html>
