@@ -515,19 +515,21 @@ function sheetsFor(b){
   return pgs.length > 1 && !final(b) ? pgs.filter(s => s.ring === b.r) : pgs;
 }
 
-const LV = ['Internasjonalt', 'Nasjonalt (NM)', 'Regionalt', 'LM (gup)'];
+const LV = ['Internasjonalt', 'Nasjonalt (NM)', 'Regionalt', 'Nasjonalt (LM, gup)'];
+// LM is a national championship, so it is read with NM, before the regional results
+const LV_ORDER = [0, 1, 3, 2];
 const MED = ['', 'gull', 'sølv', 'bronse'];
 // a candidate's medals by level, international first, so the strongest results are read first
 function profileHtml(c, s){
   const ms = (DATA.medals || {})[c.n] || [];
   const parts = c.n.split(' '), ini = (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
-  const count = (lv, pl) => ms.filter(m => m[0] === lv && m[4] === pl).length;
+  const count = (lv, pl) => ms.filter(m => (lv === 1 ? m[0] === 1 || m[0] === 3 : m[0] === lv) && m[4] === pl).length;
   let h = `<div class="prof ${c.age || 's'}"><div class="pph">${PHOTOS[c.n] ? `<img src="${PHOTOS[c.n]}" alt="${esc(c.n)}">` : `<span class="ini">${ini}</span>`}</div>
     <div class="pinfo"><div class="pnm">${esc(c.n)}</div><div class="pclub">${esc(c.c || '')}${c.l ? ` · ${c.l === 'JR' ? 'junior' : 'senior'} 2027` : ''}</div>${s.bout ? `<div>Kamp <b class="bn ${s.cor}">${s.bout}</b></div>` : ''}</div></div>`;
   h += selProfile(c.n);
-  h += `<div class="msum">${[0,1,2].map(lv => `<div><span class="ml">${LV[lv]}</span><span class="mc"><i class="md m1"></i>${count(lv,1)}<i class="md m2"></i>${count(lv,2)}<i class="md m3"></i>${count(lv,3)}</span></div>`).join('')}</div>`;
+  h += `<div class="msum">${[0,1,2].map(lv => `<div><span class="ml">${lv === 1 ? 'Nasjonalt' : LV[lv]}</span><span class="mc"><i class="md m1"></i>${count(lv,1)}<i class="md m2"></i>${count(lv,2)}<i class="md m3"></i>${count(lv,3)}</span></div>`).join('')}</div>`;
   if (!ms.length) return h + '<p class="hint">Ingen medaljer registrert på Sportdata 2024–2026.</p>';
-  for (let lv = 0; lv < 4; lv++){
+  for (const lv of LV_ORDER){
     const l = ms.filter(m => m[0] === lv); if (!l.length) continue;
     h += `<h3 class="mh">${LV[lv]} <span>${l.length}</span></h3><ul class="mlist">${l.map(m => `<li><i class="md m${m[4]}" title="${MED[m[4]]}"></i><div><b>${esc(m[2])}</b><span>${esc(m[3])}</span></div></li>`).join('')}</ul>`;
   }
@@ -873,5 +875,5 @@ setInterval(tick, 30000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 </script>
 
-<script id="buildcheck">(function(){var B="06fcdbbe1b";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
+<script id="buildcheck">(function(){var B="866d8cd0af";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
 </html>
