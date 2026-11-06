@@ -258,6 +258,8 @@ body.ovopen{overflow:hidden}
 .wrap{padding-bottom:150px}
 .panel .fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:31;width:58px;height:58px;border-radius:50%;border:0;background:var(--navy);color:#fff;font-size:1.9rem;line-height:1;cursor:pointer;box-shadow:0 6px 18px -6px rgba(0,0,0,.6)}
 .ovb{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 90px)}
+button,.ring,.blk,input[type=range]{touch-action:manipulation}
+.ring .fin{font-family:var(--display);font-weight:800;font-stretch:80%;font-size:1.05rem;letter-spacing:.06em;color:var(--ink-2);margin-top:4px}
 .blk.sel{outline:3px solid var(--brand);outline-offset:0;z-index:2}
 .nowline{position:absolute;left:var(--tc);right:0;height:0;border-top:2px solid #FF6A5E;z-index:3;pointer-events:none}
 .belt.red{background:#C62828}
@@ -391,7 +393,9 @@ function renderHall(){
     const b = current(S.day, r, S.t);
     const bi = b && b.cat ? info(b.t) : null;
     let body = `<div class="top"><span class="num">${r}</span>${bi ? belt(bi,'big') + weight(bi,'big') : ''}${bi ? icon(bi.k) : ''}</div>`;
-    if (bi && S.names) body += `<div class="who">${people(b)}</div>`;
+    // a final only holds the two who went through, so listing the whole class would look like the earlier round
+    if (bi && S.names && final(b)) body += `<div class="fin">${b.ph === 'Finale' ? 'FINALE' : 'REPECHAGE'}</div>`;
+    else if (bi && S.names) body += `<div class="who">${people(b)}</div>`;
     else if (bi) body += `<div class="cls">${nameTag(bi)}</div><div class="when">${b.ph?esc(b.ph)+' · ':''}${hm(b.s)}–${hm(b.e)}</div>`;
     else body += `<div class="when">${b && b.lunch ? 'Lunsj til '+hm(b.e) : 'Ledig'}</div>`;
     const el = document.createElement('button');
@@ -570,5 +574,5 @@ setInterval(tick, 30000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 </script>
 
-<script id="buildcheck">(function(){var B="7c0c64da14";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
+<script id="buildcheck">(function(){var B="0d73746a98";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
 </html>
