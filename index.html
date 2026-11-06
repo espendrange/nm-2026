@@ -242,7 +242,14 @@ body.ovopen{overflow:hidden}
 .ring .who .pn{font-size:.8rem}
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:25;display:flex;gap:10px;justify-content:center;padding:14px max(12px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 12px) max(12px,env(safe-area-inset-left,0px));background:linear-gradient(transparent,var(--ground) 45%);pointer-events:none}
 .dock .nowbtn{pointer-events:auto;font-size:1rem;padding:11px 20px;border-radius:999px;background:var(--navy);border:1px solid #3B5674;color:#fff;box-shadow:0 4px 14px -6px rgba(0,0,0,.5)}
-.dock .nowbtn.on{background:#FF6A5E;border-color:#FF6A5E}
+.dock{align-items:stretch}
+.dock #prev,.dock #next{flex:1 1 0;max-width:9.5rem}
+.dock #now{flex:0 0 auto;display:grid;justify-items:center;gap:1px;padding:6px 18px;border-radius:16px;min-width:7.5rem}
+.dock #now .ck{font-family:var(--mono);font-weight:600;font-size:1.6rem;line-height:1.05;font-variant-numeric:tabular-nums}
+.dock #now .sub{font-family:var(--mono);font-size:.72rem;font-weight:600;color:#FF8A80;letter-spacing:.04em}
+.dock #now.on{background:var(--navy);border-color:#FF6A5E}
+.dock #now.on .sub{color:#FF6A5E}
+.dock .gap{font-family:var(--mono);font-size:.78rem;opacity:.85}
 .dock .nowbtn:disabled{opacity:.45}
 .wrap{padding-bottom:96px}
 .ring.starting{border-color:var(--brand);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 35%,transparent)}
@@ -269,7 +276,6 @@ body.ovopen{overflow:hidden}
         <button type="button" data-day="sun" id="d-sun">Søn</button>
       </div>
       <button type="button" class="nowbtn tog" id="names" aria-pressed="false" title="Vis kandidatnavn i ringene">Navn</button>
-      <span class="clock" id="clock">08:30</span>
     </div>
     <input type="range" id="t" min="510" max="1015" step="5" value="510" aria-label="Klokkeslett">
   </header>
@@ -281,8 +287,9 @@ body.ovopen{overflow:hidden}
   </div>
 
   <nav class="dock" aria-label="Tid">
-    <button type="button" class="nowbtn" id="next" title="Hopp til neste klassestart">Neste ›</button>
+    <button type="button" class="nowbtn" id="prev" title="Hopp til forrige klassestart">‹ Forrige</button>
     <button type="button" class="nowbtn" id="now" hidden>Nå</button>
+    <button type="button" class="nowbtn" id="next" title="Hopp til neste klassestart">Neste ›</button>
   </nav>
   <div class="panel" id="panel" hidden></div>
   <div class="dv" id="day" hidden></div>
@@ -482,19 +489,29 @@ function offset(){
   const n = liveNow(), d = (S.day === 'sun' ? 1440 : 0) - (n.day === 'sun' ? 1440 : 0) + S.t - n.t;
   if (!d) return '';
   const a = Math.abs(d), sign = d > 0 ? '+' : '−';
-  if (a >= 720) return ` ${sign}${S.day === 'sun' ? 'søn' : 'lør'}`;
-  return ` ${sign}${a >= 60 ? `${Math.floor(a/60)} t ${String(a%60).padStart(2,'0')}` : `${a} min`}`;
+  if (a >= 720) return `${sign}${S.day === 'sun' ? 'søn' : 'lør'}`;
+  return sign + span(a);
+}
+const span = a => a >= 60 ? `${Math.floor(a/60)}t${String(a%60).padStart(2,'0')}` : `${a} min`;
+// the previous class start in any ring, the mirror of nextStart
+function prevStart(){
+  const n = blocks.filter(x => x.d === S.day && x.cat && !final(x) && x.s < S.t).sort((a, b) => b.s - a.s)[0];
+  return n ? n.s : null;
 }
 // the next class start in any ring; finals are skipped so each press lands on a new class
 function nextStart(){
   const n = blocks.filter(x => x.d === S.day && x.cat && !final(x) && x.s > S.t).sort((a, b) => a.s - b.s)[0];
   return n ? n.s : null;
 }
+// the dock: the shown time large in the middle, how far it is from now under it, and the gaps to the neighbouring class starts
 function liveBtn(){
   const b = $('now'); b.hidden = false;
   b.classList.toggle('on', S.live); b.setAttribute('aria-pressed', S.live);
-  b.innerHTML = S.live ? '● LIVE' : `↺ Live<span class="off">${offset()}</span>`;
+  b.innerHTML = `<b class="ck" id="clock">${hm(S.t)}</b><span class="sub">${S.live ? '● LIVE' : offset() || '● nå'}</span>`;
   b.title = S.live ? 'Følger klokka' : 'Tilbake til nå';
+  const n = nextStart(), p = prevStart();
+  $('next').disabled = n == null; $('prev').disabled = p == null;
+  $('next').innerHTML = `Neste${n == null ? '' : ` <span class="gap">(+${n - S.t < 60 ? n - S.t : span(n - S.t)})</span>`} ›`;
 }
 function goLive(){
   S.live = true; Object.assign(S, liveNow()); render();
@@ -507,14 +524,14 @@ function tick(){
   const n = liveNow();
   if (n.day === S.day && n.t === S.t) return;
   Object.assign(S, n);
-  $('t').value = S.t; $('clock').textContent = hm(S.t);
+  $('t').value = S.t; liveBtn();
   document.querySelectorAll('[data-day]').forEach(b => b.setAttribute('aria-pressed', b.dataset.day===S.day));
   if (S.view === 'day') renderDay(); else renderHall();
 }
 
 function render(){
   S.t = Math.max(510, Math.min(1015, S.t));
-  $('t').value = S.t; $('clock').textContent = hm(S.t);
+  $('t').value = S.t;
   document.querySelectorAll('[data-day]').forEach(b => b.setAttribute('aria-pressed', b.dataset.day===S.day));
   document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view===S.view));
   const dayView = S.view === 'day';
@@ -525,7 +542,6 @@ function render(){
   renderPanel();
   liveBtn();
   $('names').setAttribute('aria-pressed', S.names); $('names').hidden = S.view === 'day';
-  $('next').disabled = nextStart() == null;
   store.set('day', S.day); store.set('t', S.t); store.set('view', S.view);
 }
 document.querySelectorAll('[data-day]').forEach(b => b.onclick = () => { leaveLive(); S.day = b.dataset.day; S.ring = null; render(); });
@@ -536,11 +552,13 @@ document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => {
 });
 $('t').oninput = e => { leaveLive(); S.t = +e.target.value; render(); };
 $('now').onclick = goLive;
-$('next').onclick = () => {
-  const t = nextStart(); if (t == null) return;
+const jump = t => {
+  if (t == null) return;
   leaveLive(); S.t = t; render();
   if (S.view === 'day') $('day').scrollTop = Math.max(0, (S.t-DAY0)*PPM - 120);
 };
+$('next').onclick = () => jump(nextStart());
+$('prev').onclick = () => jump(prevStart());
 $('names').onclick = () => { S.names = !S.names; store.set('names', S.names); render(); };
 // every visit starts live; scrolling back in time is a deliberate, temporary look
 goLive();
@@ -548,5 +566,5 @@ setInterval(tick, 30000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 </script>
 
-<script id="buildcheck">(function(){var B="b62031f7b3";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
+<script id="buildcheck">(function(){var B="69002da755";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
 </html>
