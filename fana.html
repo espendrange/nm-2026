@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<style>:root{color-scheme:light}html{-webkit-text-size-adjust:100%}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif;background:#E7EDF5}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Fana i ringen</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=Public+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --ground:#EEF2F7; --surface:#FFFFFF; --sunken:#DFE8F1; --band:#DCE5EE;
+    --ink:#0C1B29; --ink-2:#40566B; --ink-3:#6E8399;
+    --rule:#CFDAE5; --rule-soft:#E2E9F1;
+    --red:#9E0000; --blue:#2947F9; --none:#6B7488; --live:#C8201B;
+    --red-ink:#9E0000; --blue-ink:#2947F9;
+    --shadow:0 1px 2px rgba(21,26,34,.07), 0 6px 16px -12px rgba(21,26,34,.4);
+    --navy:#0C1B29; --sky:#7FC0EA; --brand:#2E7EB5;
+    --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+    --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+    --ppm:1.7;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --ground:#0B1724; --surface:#12283A; --sunken:#17324A; --band:#15293C;
+      --ink:#E8EFF6; --ink-2:#A8BCCE; --ink-3:#7E93A8;
+      --rule:#24405A; --rule-soft:#1C3449;
+      --red:#D92B1F; --blue:#3B57FF; --none:#7D879A; --live:#FF4A3D;
+      --red-ink:#FF6E60; --blue-ink:#8AA0FF; --brand:#6FB4E2; --brand:#6FB4E2;
+      --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 20px -14px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --ground:#0B1724; --surface:#12283A; --sunken:#17324A; --band:#15293C;
+    --ink:#E8EFF6; --ink-2:#A8BCCE; --ink-3:#7E93A8;
+    --rule:#24405A; --rule-soft:#1C3449;
+    --red:#D92B1F; --blue:#3B57FF; --none:#7D879A; --live:#FF4A3D;
+    --red-ink:#FF6E60; --blue-ink:#8AA0FF; --brand:#6FB4E2;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 20px -14px rgba(0,0,0,.9);
+  }
+
+
+  .mast{background:var(--navy);border-radius:5px;padding:26px 24px 22px;
+        margin-bottom:4px;}
+  .mast .eyebrow{color:var(--sky);margin-bottom:12px;}
+  .mast h1{color:#FFFFFF;}
+  .mast .lede{color:#BCD2E4;}
+  body{background:var(--ground);color:var(--ink);font-family:var(--body);
+       font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:70rem;margin:0 auto;padding-inline:20px;padding-block:40px 64px;}
+
+  .eyebrow{font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.14em;
+           text-transform:uppercase;color:var(--ink-3);margin:0 0 14px;}
+  h1{font-family:var(--display);font-variation-settings:"wdth" 118;font-weight:700;
+     font-size:clamp(2.4rem,8vw,3.9rem);line-height:.98;letter-spacing:-.015em;margin:0;
+     text-wrap:balance;}
+  .lede{margin:14px 0 0;max-width:46ch;color:var(--ink-2);font-size:1.02rem;}
+  .facts{display:flex;flex-wrap:wrap;margin:26px 0 0;padding:0;
+         border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);}
+  .facts > div{flex:1 1 7rem;padding:12px 14px 13px;border-right:1px solid var(--rule-soft);}
+  .facts > div:last-child{border-right:0;}
+  .facts dt{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+            color:var(--ink-3);margin:0 0 3px;}
+  .facts dd{margin:0;font-family:var(--display);font-variation-settings:"wdth" 112;
+            font-weight:700;font-size:1.25rem;line-height:1.1;}
+  .facts .split{display:flex;align-items:baseline;gap:10px;}
+  .swatch{width:.6em;height:.6em;border-radius:2px;display:inline-block;}
+  .swatch.r{background:var(--red);} .swatch.b{background:var(--blue);}
+  .swatch.n{background:var(--none);}
+
+  .note{margin:18px 0 0;padding:11px 14px;background:var(--surface);border:1px solid var(--rule);
+        border-left:3px solid var(--brand);border-radius:3px;font-size:.86rem;color:var(--ink-2);
+        max-width:64ch;}
+  .note b{color:var(--ink);font-weight:700;}
+
+  .key{display:flex;flex-wrap:wrap;gap:8px 18px;margin:22px 0 0;font-size:.79rem;
+       color:var(--ink-3);align-items:center;}
+  .key span{display:inline-flex;align-items:center;gap:7px;}
+  .key .num{position:static;}
+  .keyline{width:26px;height:0;border-top:2px dashed var(--ink-3);display:inline-block;}
+
+  .filters{margin:20px 0 0;display:flex;flex-wrap:wrap;gap:7px;align-items:center;}
+  .filters .flabel{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;
+                   text-transform:uppercase;color:var(--ink-3);margin-right:4px;}
+  .chip{font:inherit;font-size:.84rem;font-weight:600;color:var(--ink-2);background:var(--surface);
+        border:1px solid var(--rule);border-radius:999px;padding:5px 12px;cursor:pointer;
+        transition:background .15s,color .15s,border-color .15s;}
+  .chip:hover{border-color:var(--ink-3);color:var(--ink);}
+  .chip[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink);}
+  .chip .n{font-family:var(--mono);font-size:.76em;opacity:.65;margin-left:5px;}
+  .chip:focus-visible{outline:2px solid var(--brand);outline-offset:2px;}
+
+  .day{margin-top:40px;}
+  .dayhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 3px;}
+  .dayhead h2{font-family:var(--display);font-variation-settings:"wdth" 115;font-weight:700;
+              font-size:1.4rem;letter-spacing:-.01em;margin:0;}
+  .dayhead .tag{font-family:var(--mono);font-size:.68rem;font-weight:600;letter-spacing:.12em;
+                text-transform:uppercase;color:var(--brand);}
+  .daymeta{font-family:var(--mono);font-size:.76rem;color:var(--ink-3);margin:0 0 12px;}
+
+  .scroll{overflow-x:auto;padding-bottom:4px;}
+  .grid{display:grid;min-width:min-content;}
+  .rings{display:contents;}
+  .rh{font-family:var(--mono);font-size:.68rem;font-weight:600;letter-spacing:.1em;
+      text-transform:uppercase;color:var(--ink-3);padding:0 0 7px 2px;}
+  .rh.gut{position:sticky;left:0;background:var(--ground);z-index:3;}
+  .rh a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+  .rh a:hover{color:var(--ink);}
+  .rh a:focus-visible{outline:2px solid var(--live);outline-offset:2px;border-radius:2px;}
+  .play{color:var(--live);font-size:.9em;line-height:1;display:inline-block;
+        transition:transform .15s;}
+  .rh a:hover .play{transform:scale(1.15);}
+  .gala{display:inline-flex;align-items:center;gap:5px;margin-left:10px;color:var(--live);
+        text-decoration:none;font-weight:600;}
+  .gala:hover{text-decoration:underline;text-underline-offset:2px;}
+  .gut{width:48px;}
+  .gutter{position:relative;position:sticky;left:0;background:var(--ground);z-index:2;margin-top:9px;}
+  .gutter b{position:absolute;right:8px;transform:translateY(-.55em);font-family:var(--mono);
+            font-size:.68rem;font-weight:500;color:var(--ink-3);font-variant-numeric:tabular-nums;}
+  .track{position:relative;margin-top:9px;border-left:1px solid var(--rule-soft);
+         background-image:repeating-linear-gradient(to bottom,
+           var(--rule-soft) 0 1px, transparent 1px calc(60 * var(--ppm) * 1px));}
+
+  .brk{position:absolute;left:0;right:0;background:var(--band);
+       display:flex;align-items:center;justify-content:center;}
+  .brk span{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+            color:var(--ink-3);}
+
+  .ev{position:absolute;left:3px;right:3px;background:var(--surface);
+      border:1px solid var(--rule-soft);border-left:4px solid var(--edge);border-radius:3px;
+      box-shadow:var(--shadow);padding:7px 9px 6px;overflow:hidden;
+      display:flex;flex-direction:column;gap:1px;transition:opacity .18s;}
+  .ev.red{--edge:var(--red);--tone:var(--red-ink);}
+  .ev.blue{--edge:var(--blue);--tone:var(--blue-ink);}
+  .ev.none{--edge:var(--none);--tone:var(--ink-2);}
+  .ev.dim{opacity:.22;}
+  .ev{text-decoration:none;color:inherit;cursor:pointer;}
+  .ev:hover{border-color:var(--edge);box-shadow:0 2px 4px rgba(0,0,0,.09),0 10px 22px -14px var(--edge);}
+  .ev:focus-visible{outline:2px solid var(--edge);outline-offset:1px;}
+  .ev .go{position:absolute;top:5px;right:6px;font-size:.78rem;line-height:1;color:var(--ink-3);
+          opacity:.55;transition:opacity .15s,color .15s;}
+  .ev:hover .go{opacity:1;color:var(--tone);}
+  .ev .cat{font-size:.74rem;font-weight:700;color:var(--ink);line-height:1.2;padding-right:15px;
+           white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ev .win{font-family:var(--mono);font-size:.63rem;color:var(--ink-3);line-height:1.4;
+           white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ev .me{display:flex;align-items:center;gap:7px;margin-top:4px;}
+  .num{flex:none;min-width:20px;height:20px;border-radius:2px;background:var(--edge);color:#fff;
+       font-family:var(--mono);font-weight:600;font-size:.76rem;display:inline-flex;
+       align-items:center;justify-content:center;padding:0 5px;}
+  .ev .who{font-size:.92rem;font-weight:700;letter-spacing:-.005em;line-height:1.1;
+           white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ev .est{flex:none;margin-left:auto;font-family:var(--mono);font-size:.72rem;
+           color:var(--tone);font-weight:600;}
+  .ev .opp{font-size:.7rem;color:var(--ink-3);line-height:1.25;white-space:nowrap;
+           overflow:hidden;text-overflow:ellipsis;}
+  .ev .cc{font-family:var(--mono);font-size:.9em;}
+  .mark{position:absolute;left:0;right:0;border-top:2px dashed var(--edge);opacity:.5;
+        pointer-events:none;}
+
+  footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--rule);
+         color:var(--ink-3);font-size:.82rem;}
+  footer p{margin:0 0 9px;max-width:66ch;}
+  footer b{color:var(--ink-2);font-weight:600;}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+
+  .ev{height:auto;box-sizing:border-box;}
+  .ev .opp{white-space:normal;}
+  .ev.multi .opp{white-space:nowrap;}
+  .mast .facts{border-color:rgba(255,255,255,.18);}
+  .mast .facts > div{border-right-color:rgba(255,255,255,.1);}
+  .mast .facts dt{color:#8FA9C0;}
+  .mast .facts dd{color:#FFFFFF;}
+  .ev:hover,.ev:focus-visible{z-index:4;}
+  .track{background-image:repeating-linear-gradient(to bottom,var(--rule-soft) 0 1px,transparent 1px 270px);}
+  .ev .row{margin-top:4px;transition:opacity .18s;}
+  .ev .row .me{margin-top:0;}
+  .ev.dim .row{opacity:1;}
+  .ev.part .row.off{opacity:.3;}
+  .ev .mark.off{opacity:.12;}
+  .lv{font-family:var(--mono);font-size:.6rem;font-weight:600;letter-spacing:.06em;margin-right:6px;
+      padding:1px 4px;border-radius:2px;vertical-align:1px;}
+  .lv.nm{background:var(--navy);color:#fff;}
+  .lv.lm{background:var(--sunken);color:var(--ink-2);}
+  .ev .cat{white-space:normal;}
+  .mast a{color:var(--sky);}
+  .links{display:flex;flex-wrap:wrap;gap:8px 18px;margin:16px 0 0;font-size:.86rem;}
+  .links a{font-weight:600;text-underline-offset:2px;}
+  .rh a{text-decoration:underline dotted;text-underline-offset:3px;}
+  @media (max-width:640px){.wrap{padding-inline:16px;padding-block:20px 48px;}.mast{padding:22px 18px 18px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="eyebrow">NM &amp; LM Taekwon-Do ITF 2026 &middot; Aquarama, Kristiansand</p>
+    <h1>Fana i ringen</h1>
+    <p class="lede">Alle Fana TKD-starter i trekningen, ring for ring &mdash; og ut fra kampnummeret omtrent når hver enkelt står på matta.</p>
+    <dl class="facts">
+      <div><dt>Utøvere</dt><dd>21</dd></div>
+      <div><dt>Starter</dt><dd>39</dd></div>
+      <div><dt>Hjørne</dt><dd class="split"><span><i class="swatch r"></i> 19</span><span><i class="swatch b"></i> 17</span><span><i class="swatch n"></i> 3</span></dd></div>
+      <div><dt>Dager</dt><dd>7.&ndash;8. nov</dd></div>
+      <div><dt>Ringer</dt><dd>1&ndash;8</dd></div>
+    </dl>
+    <p class="note"><b>Fra trekningen 30. oktober.</b> Spesialteknikk Dame sr./veteran og Herre junior har en Fana-utøver hver, men utskriften viser ikke hvem &mdash; de står som &laquo;Fana-utøver&raquo;. Clara går også Spesialteknikk Dame junior, uten oppgitt rekkefølge.</p>
+    <div class="key">
+      <span><i class="num" style="background:var(--red)">7</i> kampnummer &mdash; rødt hjørne</span>
+      <span><i class="num" style="background:var(--blue)">3</i> blått hjørne</span>
+      <span><i class="num" style="background:var(--none)">?</i> teknikk &mdash; uten hjørne</span>
+      <span><i class="keyline"></i> beregnet tid på matta</span>
+      <span>&#8599; trykk på et kort for trekningen på sportdata</span>
+    </div>
+    <p class="links"><a href="./">Hallkartet &rarr;</a><a href="https://www.sportdata.org/kampsport/set-online/veranstaltung_info_main.php?active_menu=calendar&amp;vernr=1122#a_eventhead" target="_blank" rel="noopener">Stevnet på sportdata &#8599;</a></p>
+  </header>
+  <nav class="filters" aria-label="Fremhev én utøver">
+    <span class="flabel">Fremhev</span>
+    <button class="chip" type="button" data-who="all" aria-pressed="true">Alle<span class="n">39</span></button>
+    <button class="chip" type="button" data-who="kaleo" aria-pressed="false">Kaleo<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="marius" aria-pressed="false">Marius<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="aksel" aria-pressed="false">Aksel<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="torvald" aria-pressed="false">Torvald<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="bjornar" aria-pressed="false">Bjørnar<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="remi" aria-pressed="false">Remi<span class="n">1</span></button>
+    <button class="chip" type="button" data-who="cato" aria-pressed="false">Cato<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="hanna" aria-pressed="false">Hanna<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="clara" aria-pressed="false">Clara<span class="n">3</span></button>
+    <button class="chip" type="button" data-who="eline" aria-pressed="false">Eline<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="kristine" aria-pressed="false">Kristine<span class="n">1</span></button>
+    <button class="chip" type="button" data-who="kaja" aria-pressed="false">Kaja<span class="n">1</span></button>
+    <button class="chip" type="button" data-who="adam" aria-pressed="false">Adam<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="hakonb" aria-pressed="false">Håkon B.<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="hakonf" aria-pressed="false">Håkon F.<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="sindre" aria-pressed="false">Sindre<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="hasti" aria-pressed="false">Hasti<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="ingeborg" aria-pressed="false">Ingeborg<span class="n">2</span></button>
+    <button class="chip" type="button" data-who="molly" aria-pressed="false">Molly<span class="n">1</span></button>
+    <button class="chip" type="button" data-who="hedda" aria-pressed="false">Hedda<span class="n">1</span></button>
+    <button class="chip" type="button" data-who="solveig" aria-pressed="false">Solveig<span class="n">1</span></button>
+  </nav>
+  <section class="day">
+    <div class="dayhead"><span class="tag">Dag 1</span><h2>Lørdag 7. november</h2></div>
+    <p class="daymeta">28 starter &middot; 08:30&ndash;16:55 &middot; ring 1, 3, 4, 5, 6, 7, 8</p>
+    <div class="scroll"><div class="grid" style="grid-template-columns:48px repeat(7,minmax(196px,1fr))">
+      <div class="rh gut"></div>
+      <div class="rh"><a href="./" title="Åpne hallkartet">Ring 1</a></div>
+      <div class="rh"><a href="./" title="Åpne hallkartet">Ring 3</a></div>
+      <div class="rh"><a href="./" title="Åpne hallkartet">Ring 4</a></div>
+      <div class="rh"><a href="./" title="Åpne hallkartet">Ring 5</a></div>
+      <div class="rh"><a href="./" title="Åpne hallkartet">Ring 6</a></div>
+      <div class="rh"><a href="./" title="Åpne hallkartet">Ring 7</a></div>
+      <div class="rh"><a href="./" title="Åpne hallkartet">Ring 8</a></div>
+      <div class="gutter" style="height:2430px">
+        <b style="top:0.0px">08:00</b>
+        <b style="top:270.0px">09:00</b>
+        <b style="top:540.0px">10:00</b>
+        <b style="top:810.0px">11:00</b>
+        <b style="top:1080.0px">12:00</b>
+        <b style="top:1350.0px">13:00</b>
+        <b style="top:1620.0px">14:00</b>
+        <b style="top:1890.0px">15:00</b>
+        <b style="top:2160.0px">16:00</b>
+      </div>
+      <div class="track" style="height:2430px">
+        <div class="brk" style="top:832.5px;height:202.5px"><span>Lunsj</span></div>
+        <div class="brk" style="top:1350.0px;height:270.0px"><span>Offisiell åpning</span></div>
+        <a class="ev blue" data-who="eline" style="top:382.5px;min-height:200.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=5152&amp;verid=1122" target="_blank" rel="noopener" title="Eline Ridderseth Mæland — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="eline" style="top:73.6px;border-color:var(--blue)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Mønster · Dame senior · 1. dan</div>
+          <div class="win">09:25–10:10 · pulje 1/1 · finale ring 3 kl. 10:20</div>
+          <div class="row" data-who="eline"><div class="me"><span class="num" style="background:var(--blue)">5</span><span class="who">Eline</span><span class="est" style="color:var(--blue-ink)">&asymp;09:41</span></div>
+          <div class="opp">kamp 5 av 11 · mot Rezai Mobina (Bergen)</div></div>
+        </a>
+        <a class="ev blue" data-who="kaja" style="top:720.0px;min-height:88.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=6370&amp;verid=1122" target="_blank" rel="noopener" title="Kaja Kronheim — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="kaja" style="top:45.0px;border-color:var(--blue)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Mønster · Dame U21 · 1.–3. dan</div>
+          <div class="win">10:40–11:00 · pulje 1/1</div>
+          <div class="row" data-who="kaja"><div class="me"><span class="num" style="background:var(--blue)">3</span><span class="who">Kaja</span><span class="est" style="color:var(--blue-ink)">&asymp;10:50</span></div>
+          <div class="opp">kamp 3 av 4 · mot Wolanin Zuzanna (Røyken)</div></div>
+        </a>
+      </div>
+      <div class="track" style="height:2430px">
+        <div class="brk" style="top:855.0px;height:202.5px"><span>Lunsj</span></div>
+        <div class="brk" style="top:1350.0px;height:270.0px"><span>Offisiell åpning</span></div>
+        <a class="ev red" data-who="torvald" style="top:675.0px;min-height:178.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=5056&amp;verid=1122" target="_blank" rel="noopener" title="Torvald Nam Hoon Torsteinsen — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="torvald" style="top:0.0px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Mønster · Herre senior · 3. dan</div>
+          <div class="win">10:30–11:10 · pulje 1/1 · finale ring 3 kl. 13:25</div>
+          <div class="row" data-who="torvald"><div class="me"><span class="num" style="background:var(--red)">1</span><span class="who">Torvald</span><span class="est" style="color:var(--red-ink)">&asymp;10:30</span></div>
+          <div class="opp">kamp 1 av 10 · mot Wighus Stian Hammerseth (Røyken)</div></div>
+        </a>
+        <a class="ev red" data-who="eline" style="top:1057.5px;min-height:223.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=5485&amp;verid=1122" target="_blank" rel="noopener" title="Eline Ridderseth Mæland — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="eline" style="top:0.0px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Sparring · Dame senior · 55–60 kg</div>
+          <div class="win">11:55–12:45 · pulje 1/1 · finale ring 2 kl. 13:30</div>
+          <div class="row" data-who="eline"><div class="me"><span class="num" style="background:var(--red)">1</span><span class="who">Eline</span><span class="est" style="color:var(--red-ink)">&asymp;11:55</span></div>
+          <div class="opp">kamp 1 av 6 · mot Gajinov Natalija (Asker)</div></div>
+        </a>
+        <a class="ev none multi" data-who="bjornar remi cato" style="top:1642.5px;min-height:155.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=5073&amp;verid=1122" target="_blank" rel="noopener" title="Bjørnar Blaalid, Remi Juan Skage, Cato Rene Hoff — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="bjornar" style="top:0.0px;border-color:var(--blue)"></div>
+          <div class="mark" data-who="remi" style="top:17.5px;border-color:var(--red)"></div>
+          <div class="mark" data-who="cato" style="top:52.5px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Mønster · Herre veteran · 3.–6. dan</div>
+          <div class="win">14:05–14:40 · pulje 1/1</div>
+          <div class="row" data-who="bjornar"><div class="me"><span class="num" style="background:var(--blue)">1</span><span class="who">Bjørnar</span><span class="est" style="color:var(--blue-ink)">&asymp;14:05</span></div>
+          <div class="opp">kamp 1 av 9 · mot Barland Rune Thorsen (Selbu)</div></div>
+          <div class="row" data-who="remi"><div class="me"><span class="num" style="background:var(--red)">2</span><span class="who">Remi</span><span class="est" style="color:var(--red-ink)">&asymp;14:09</span></div>
+          <div class="opp">kamp 2 av 9 · mot Lund Eirik (Lier)</div></div>
+          <div class="row" data-who="cato"><div class="me"><span class="num" style="background:var(--red)">4</span><span class="who">Cato</span><span class="est" style="color:var(--red-ink)">&asymp;14:17</span></div>
+          <div class="opp">kamp 4 av 9 · mot Soltvedt Eivind (Kongsvinger)</div></div>
+        </a>
+        <a class="ev red" data-who="kristine" style="top:1822.5px;min-height:65.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=5173&amp;verid=1122" target="_blank" rel="noopener" title="Kristine Solhaug Hille — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="kristine" style="top:0.0px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Mønster · Dame veteran · 3.–6. dan</div>
+          <div class="win">14:45–15:00 · pulje 1/1</div>
+          <div class="row" data-who="kristine"><div class="me"><span class="num" style="background:var(--red)">1</span><span class="who">Kristine</span><span class="est" style="color:var(--red-ink)">&asymp;14:45</span></div>
+          <div class="opp">kamp 1 av 3 · mot Steinkjer Aud-Eli (Værnes)</div></div>
+        </a>
+        <a class="ev blue" data-who="torvald" style="top:2025.0px;min-height:245.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=5322&amp;verid=1122" target="_blank" rel="noopener" title="Torvald Nam Hoon Torsteinsen — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="torvald" style="top:82.5px;border-color:var(--blue)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Sparring · Herre senior · −63 kg</div>
+          <div class="win">15:30–16:25 · pulje 1/1</div>
+          <div class="row" data-who="torvald"><div class="me"><span class="num" style="background:var(--blue)">3</span><span class="who">Torvald</span><span class="est" style="color:var(--blue-ink)">&asymp;15:48</span></div>
+          <div class="opp">kamp 3 av 6 · mot Lind Mats (Bergen)</div></div>
+        </a>
+      </div>
+      <div class="track" style="height:2430px">
+        <div class="brk" style="top:1125.0px;height:202.5px"><span>Lunsj</span></div>
+        <div class="brk" style="top:1350.0px;height:270.0px"><span>Offisiell åpning</span></div>
+        <a class="ev none" data-who="clara" style="top:135.0px;min-height:335.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcatpunkte&amp;catid=7868&amp;verid=1122" target="_blank" rel="noopener" title="Clara Sofie Brændeland Fürstenberg — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="cat"><span class="lv nm">NM</span>Spesialteknikk · Dame junior · 1.–3. dan</div>
+          <div class="win">08:30–09:45 · pulje 1/1</div>
+          <div class="row" data-who="clara"><div class="me"><span class="num" style="background:var(--none)">?</span><span class="who">Clara</span><span class="est" style="color:var(--ink-2)"></span></div>
+          <div class="opp">konkurrenter: 15 · rekkefølgen står ikke i utskriften</div></div>
+        </a>
+        <a class="ev none" data-who="ukjent" style="top:832.5px;min-height:245.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcatpunkte&amp;catid=5567&amp;verid=1122" target="_blank" rel="noopener" title="Fana TKD — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="cat"><span class="lv nm">NM</span>Spesialteknikk · Dame sr./veteran · 1.–6. dan</div>
+          <div class="win">11:05–12:00 · pulje 1/1</div>
+          <div class="row" data-who="ukjent"><div class="me"><span class="num" style="background:var(--none)">?</span><span class="who">Fana-utøver</span><span class="est" style="color:var(--ink-2)"></span></div>
+          <div class="opp">konkurrenter: 11 · Fana har en utøver her, men navnet står ikke i utskriften</div></div>
+        </a>
+        <a class="ev none" data-who="ukjent" style="top:1867.5px;min-height:493.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcatpunkte&amp;catid=7861&amp;verid=1122" target="_blank" rel="noopener" title="Fana TKD — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="cat"><span class="lv nm">NM</span>Spesialteknikk · Herre junior · 1.–3. dan</div>
+          <div class="win">14:55–16:45 · pulje 1/1</div>
+          <div class="row" data-who="ukjent"><div class="me"><span class="num" style="background:var(--none)">?</span><span class="who">Fana-utøver</span><span class="est" style="color:var(--ink-2)"></span></div>
+          <div class="opp">konkurrenter: 22 · Fana har en utøver her, men navnet står ikke i utskriften</div></div>
+        </a>
+      </div>
+      <div class="track" style="height:2430px">
+        <div class="brk" style="top:1125.0px;height:202.5px"><span>Lunsj</span></div>
+        <div class="brk" style="top:1350.0px;height:270.0px"><span>Offisiell åpning</span></div>
+        <a class="ev blue" data-who="aksel" style="top:135.0px;min-height:358.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7859&amp;verid=1122" target="_blank" rel="noopener" title="Aksel Stangervåg Helligsøe — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="aksel" style="top:108.0px;border-color:var(--blue)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Mønster · Herre junior · 1. dan</div>
+          <div class="win">08:30–09:50 · pulje 1/2 · finale ring 3 kl. 10:00</div>
+          <div class="row" data-who="aksel"><div class="me"><span class="num" style="background:var(--blue)">7</span><span class="who">Aksel</span><span class="est" style="color:var(--blue-ink)">&asymp;08:54</span></div>
+          <div class="opp">kamp 7 av 20 · mot vinner av Hörnqvist-Smith Nicholas (Gauldal) / Kulvik Theo (Trondheim)</div></div>
+        </a>
+      </div>
+      <div class="track" style="height:2430px">
+        <div class="brk" style="top:1125.0px;height:202.5px"><span>Lunsj</span></div>
+        <div class="brk" style="top:1350.0px;height:270.0px"><span>Offisiell åpning</span></div>
+        <a class="ev red" data-who="marius" style="top:135.0px;min-height:358.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7859&amp;verid=1122" target="_blank" rel="noopener" title="Marius Kvinge Braadland — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="marius" style="top:18.0px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Mønster · Herre junior · 1. dan</div>
+          <div class="win">08:30–09:50 · pulje 2/2 · finale ring 3 kl. 10:00</div>
+          <div class="row" data-who="marius"><div class="me"><span class="num" style="background:var(--red)">2</span><span class="who">Marius</span><span class="est" style="color:var(--red-ink)">&asymp;08:34</span></div>
+          <div class="opp">kamp 2 av 20 · mot Akrim Ulrik (Surnadal)</div></div>
+        </a>
+        <a class="ev red" data-who="clara" style="top:517.5px;min-height:335.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7866&amp;verid=1122" target="_blank" rel="noopener" title="Clara Sofie Brændeland Fürstenberg — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="clara" style="top:150.0px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Mønster · Dame junior · 1. dan</div>
+          <div class="win">09:55–11:10 · pulje 1/2 · finale ring 2 kl. 11:25</div>
+          <div class="row" data-who="clara"><div class="me"><span class="num" style="background:var(--red)">9</span><span class="who">Clara</span><span class="est" style="color:var(--red-ink)">&asymp;10:28</span></div>
+          <div class="opp">kamp 9 av 18 · mot Johnsen Elisa Nordmo (Trondheim)</div></div>
+        </a>
+      </div>
+      <div class="track" style="height:2430px">
+        <div class="brk" style="top:922.5px;height:202.5px"><span>Lunsj</span></div>
+        <div class="brk" style="top:1350.0px;height:270.0px"><span>Offisiell åpning</span></div>
+        <a class="ev red multi" data-who="molly hedda ingeborg" style="top:135.0px;min-height:335.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7838&amp;verid=1123" target="_blank" rel="noopener" title="Molly Falck-Olsen, Hedda Lundarheim, Ingeborg Ursin Haugrønning — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="molly" style="top:12.5px;border-color:var(--red)"></div>
+          <div class="mark" data-who="hedda" style="top:50.0px;border-color:var(--red)"></div>
+          <div class="mark" data-who="ingeborg" style="top:125.0px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Mønster · Dame pre-junior · 2.–1. gup</div>
+          <div class="win">08:30–09:45 · pulje 1/2 · finale ring 7 kl. 11:00</div>
+          <div class="row" data-who="molly"><div class="me"><span class="num" style="background:var(--red)">2</span><span class="who">Molly</span><span class="est" style="color:var(--red-ink)">&asymp;08:33</span></div>
+          <div class="opp">kamp 2 av 27 · mot Schultz Filippa (Røyken)</div></div>
+          <div class="row" data-who="hedda"><div class="me"><span class="num" style="background:var(--red)">5</span><span class="who">Hedda</span><span class="est" style="color:var(--red-ink)">&asymp;08:41</span></div>
+          <div class="opp">kamp 5 av 27 · mot Bye Iliana Ellbjørg (Bergen)</div></div>
+          <div class="row" data-who="ingeborg"><div class="me"><span class="num" style="background:var(--red)">11</span><span class="who">Ingeborg</span><span class="est" style="color:var(--red-ink)">&asymp;08:58</span></div>
+          <div class="opp">kamp 11 av 27 · mot Hammervold Solveig Linnea (Skien)</div></div>
+        </a>
+        <a class="ev none" data-who="hasti solveig" style="top:472.5px;min-height:335.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7838&amp;verid=1123" target="_blank" rel="noopener" title="Hasti Seerwan Mohammed, Solveig Hassall — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="hasti" style="top:37.5px;border-color:var(--blue)"></div>
+          <div class="mark" data-who="solveig" style="top:125.0px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Mønster · Dame pre-junior · 2.–1. gup</div>
+          <div class="win">09:45–11:00 · pulje 2/2 · finale ring 7 kl. 11:00</div>
+          <div class="row" data-who="hasti"><div class="me"><span class="num" style="background:var(--blue)">4</span><span class="who">Hasti</span><span class="est" style="color:var(--blue-ink)">&asymp;09:53</span></div>
+          <div class="opp">kamp 4 av 27 · mot Skorve Julie (Voss)</div></div>
+          <div class="row" data-who="solveig"><div class="me"><span class="num" style="background:var(--red)">11</span><span class="who">Solveig</span><span class="est" style="color:var(--red-ink)">&asymp;10:13</span></div>
+          <div class="opp">kamp 11 av 27 · mot Lier-Hansen Signe (Bergen)</div></div>
+        </a>
+        <a class="ev blue" data-who="hakonf" style="top:1642.5px;min-height:200.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7823&amp;verid=1123" target="_blank" rel="noopener" title="Håkon Jøsok Felle — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="hakonf" style="top:12.7px;border-color:var(--blue)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Mønster · Herre junior · 2.–1. gup</div>
+          <div class="win">14:05–14:50 · pulje 1/2 · finale ring 6 kl. 15:05</div>
+          <div class="row" data-who="hakonf"><div class="me"><span class="num" style="background:var(--blue)">2</span><span class="who">Håkon F.</span><span class="est" style="color:var(--blue-ink)">&asymp;14:08</span></div>
+          <div class="opp">kamp 2 av 16 · mot vinner av Mittet Christer (Ålesund) / Unander-Daza Alexander (Trondheim)</div></div>
+        </a>
+      </div>
+      <div class="track" style="height:2430px">
+        <div class="brk" style="top:1125.0px;height:202.5px"><span>Lunsj</span></div>
+        <div class="brk" style="top:1350.0px;height:270.0px"><span>Offisiell åpning</span></div>
+        <a class="ev red" data-who="adam" style="top:135.0px;min-height:245.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7878&amp;verid=1123" target="_blank" rel="noopener" title="Adam Campbell-Enoksen — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="adam" style="top:12.4px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Mønster · Herre pre-junior · 2.–1. gup</div>
+          <div class="win">08:30–09:25 · pulje 1/2 · finale ring 8 kl. 10:20</div>
+          <div class="row" data-who="adam"><div class="me"><span class="num" style="background:var(--red)">2</span><span class="who">Adam</span><span class="est" style="color:var(--red-ink)">&asymp;08:33</span></div>
+          <div class="opp">kamp 2 av 20 · mot Angelfoss Laurits Stalheim (Bergen)</div></div>
+        </a>
+        <a class="ev blue" data-who="hakonb" style="top:382.5px;min-height:245.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7878&amp;verid=1123" target="_blank" rel="noopener" title="Håkon August Bruun — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="hakonb" style="top:148.5px;border-color:var(--blue)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Mønster · Herre pre-junior · 2.–1. gup</div>
+          <div class="win">09:25–10:20 · pulje 2/2 · finale ring 8 kl. 10:20</div>
+          <div class="row" data-who="hakonb"><div class="me"><span class="num" style="background:var(--blue)">13</span><span class="who">Håkon B.</span><span class="est" style="color:var(--blue-ink)">&asymp;09:58</span></div>
+          <div class="opp">kamp 13 av 20 · mot Fløan Emilian Dolmen (Værnes)</div></div>
+        </a>
+        <a class="ev red" data-who="hanna" style="top:787.5px;min-height:245.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7862&amp;verid=1122" target="_blank" rel="noopener" title="Hanna Wulff Myklebust — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="hanna" style="top:57.1px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Mønster · Dame pre-junior · 1.–3. dan</div>
+          <div class="win">10:55–11:50 · pulje 1/1</div>
+          <div class="row" data-who="hanna"><div class="me"><span class="num" style="background:var(--red)">4</span><span class="who">Hanna</span><span class="est" style="color:var(--red-ink)">&asymp;11:08</span></div>
+          <div class="opp">kamp 4 av 13 · mot Viggen Live Grovehagen (Molde)</div></div>
+        </a>
+        <a class="ev blue" data-who="kaleo" style="top:1057.5px;min-height:65.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7855&amp;verid=1122" target="_blank" rel="noopener" title="Kaleo Leander Brændeland Fürstenberg — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="kaleo" style="top:22.5px;border-color:var(--blue)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Mønster · Herre pre-junior · 1.–3. dan</div>
+          <div class="win">11:55–12:10 · pulje 1/1</div>
+          <div class="row" data-who="kaleo"><div class="me"><span class="num" style="background:var(--blue)">2+3</span><span class="who">Kaleo</span><span class="est" style="color:var(--blue-ink)">&asymp;12:00 / 12:05</span></div>
+          <div class="opp">kamp 2 av 3 · mot Blakli Sverre (Trondheim), så kamp 3 mot Larsson-Fedde Filip (Askøy)</div></div>
+        </a>
+        <a class="ev blue" data-who="sindre" style="top:1642.5px;min-height:200.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7823&amp;verid=1123" target="_blank" rel="noopener" title="Sindre Lundarheim — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="sindre" style="top:12.7px;border-color:var(--blue)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Mønster · Herre junior · 2.–1. gup</div>
+          <div class="win">14:05–14:50 · pulje 2/2 · finale ring 6 kl. 15:05</div>
+          <div class="row" data-who="sindre"><div class="me"><span class="num" style="background:var(--blue)">2</span><span class="who">Sindre</span><span class="est" style="color:var(--blue-ink)">&asymp;14:08</span></div>
+          <div class="opp">kamp 2 av 16 · mot vinner av Løberg David (Skien) / Nilsen-Bie Elliot (Alta)</div></div>
+        </a>
+        <a class="ev red" data-who="cato" style="top:2160.0px;min-height:133.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7886&amp;verid=1123" target="_blank" rel="noopener" title="Cato Rene Hoff — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="cato" style="top:0.0px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Sparring · Herre veteran · +84 kg</div>
+          <div class="win">16:00–16:30 · pulje 1/1</div>
+          <div class="row" data-who="cato"><div class="me"><span class="num" style="background:var(--red)">1</span><span class="who">Cato</span><span class="est" style="color:var(--red-ink)">&asymp;16:00</span></div>
+          <div class="opp">kamp 1 av 8 · mot Vinkenes Christian (Salten)</div></div>
+        </a>
+        <a class="ev blue" data-who="bjornar" style="top:2317.5px;min-height:88.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7885&amp;verid=1123" target="_blank" rel="noopener" title="Bjørnar Blaalid — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="bjornar" style="top:22.5px;border-color:var(--blue)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Sparring · Herre veteran · 76–84 kg</div>
+          <div class="win">16:35–16:55 · pulje 1/1</div>
+          <div class="row" data-who="bjornar"><div class="me"><span class="num" style="background:var(--blue)">2</span><span class="who">Bjørnar</span><span class="est" style="color:var(--blue-ink)">&asymp;16:40</span></div>
+          <div class="opp">kamp 2 av 4 · mot vinner av Leirivaara Tony (Drammen) / Raaen Anders (Surnadal)</div></div>
+        </a>
+      </div>
+    </div></div>
+  </section>
+  <section class="day">
+    <div class="dayhead"><span class="tag">Dag 2</span><h2>Søndag 8. november</h2></div>
+    <p class="daymeta">11 starter &middot; 08:30&ndash;11:45 &middot; ring 1, 2, 5, 6, 7, 8</p>
+    <div class="scroll"><div class="grid" style="grid-template-columns:48px repeat(6,minmax(196px,1fr))">
+      <div class="rh gut"></div>
+      <div class="rh"><a href="./" title="Åpne hallkartet">Ring 1</a></div>
+      <div class="rh"><a href="./" title="Åpne hallkartet">Ring 2</a></div>
+      <div class="rh"><a href="./" title="Åpne hallkartet">Ring 5</a></div>
+      <div class="rh"><a href="./" title="Åpne hallkartet">Ring 6</a></div>
+      <div class="rh"><a href="./" title="Åpne hallkartet">Ring 7</a></div>
+      <div class="rh"><a href="./" title="Åpne hallkartet">Ring 8</a></div>
+      <div class="gutter" style="height:1080px">
+        <b style="top:0.0px">08:00</b>
+        <b style="top:270.0px">09:00</b>
+        <b style="top:540.0px">10:00</b>
+        <b style="top:810.0px">11:00</b>
+      </div>
+      <div class="track" style="height:1080px">
+        <a class="ev red" data-who="marius aksel" style="top:675.0px;min-height:223.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7857&amp;verid=1122" target="_blank" rel="noopener" title="Marius Kvinge Braadland, Aksel Stangervåg Helligsøe — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="marius" style="top:0.0px;border-color:var(--red)"></div>
+          <div class="mark" data-who="aksel" style="top:75.0px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Sparring · Herre junior · 1.–3. dan · 70–75 kg</div>
+          <div class="win">10:30–11:20 · pulje 1/1 · finale ring 2 kl. 11:45</div>
+          <div class="row" data-who="marius"><div class="me"><span class="num" style="background:var(--red)">1</span><span class="who">Marius</span><span class="est" style="color:var(--red-ink)">&asymp;10:30</span></div>
+          <div class="opp">kamp 1 av 6 · mot Hörnqvist-Smith Nicholas (Gauldal)</div></div>
+          <div class="row" data-who="aksel"><div class="me"><span class="num" style="background:var(--red)">3</span><span class="who">Aksel</span><span class="est" style="color:var(--red-ink)">&asymp;10:47</span></div>
+          <div class="opp">kamp 3 av 6 · mot Irgens-Hansen Einar (Bergen)</div></div>
+        </a>
+      </div>
+      <div class="track" style="height:1080px">
+        <a class="ev red" data-who="clara" style="top:810.0px;min-height:178.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7850&amp;verid=1122" target="_blank" rel="noopener" title="Clara Sofie Brændeland Fürstenberg — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="clara" style="top:0.0px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv nm">NM</span>Sparring · Dame junior · 1.–3. dan · +65 kg</div>
+          <div class="win">11:00–11:40 · pulje 1/1</div>
+          <div class="row" data-who="clara"><div class="me"><span class="num" style="background:var(--red)">1</span><span class="who">Clara</span><span class="est" style="color:var(--red-ink)">&asymp;11:00</span></div>
+          <div class="opp">kamp 1 av 4 · mot Linn-Valdor Martine (Trondheim)</div></div>
+        </a>
+      </div>
+      <div class="track" style="height:1080px">
+        <div class="brk" style="top:967.5px;height:112.5px"><span>Lunsj</span></div>
+        <a class="ev red" data-who="hakonf" style="top:405.0px;min-height:110.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7880&amp;verid=1123" target="_blank" rel="noopener" title="Håkon Jøsok Felle — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="hakonf" style="top:0.0px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Sparring · Herre junior · 2.–1. gup · 60–65 kg</div>
+          <div class="win">09:30–09:55 · pulje 1/1</div>
+          <div class="row" data-who="hakonf"><div class="me"><span class="num" style="background:var(--red)">1</span><span class="who">Håkon F.</span><span class="est" style="color:var(--red-ink)">&asymp;09:30</span></div>
+          <div class="opp">kamp 1 av 6 · mot Nygård Aron Amdal (Sandnes)</div></div>
+        </a>
+      </div>
+      <div class="track" style="height:1080px">
+        <div class="brk" style="top:945.0px;height:135.0px"><span>Lunsj</span></div>
+        <a class="ev blue" data-who="sindre" style="top:135.0px;min-height:223.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7881&amp;verid=1123" target="_blank" rel="noopener" title="Sindre Lundarheim — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="sindre" style="top:69.2px;border-color:var(--blue)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Sparring · Herre junior · 2.–1. gup · 65–70 kg</div>
+          <div class="win">08:30–09:20 · pulje 1/1</div>
+          <div class="row" data-who="sindre"><div class="me"><span class="num" style="background:var(--blue)">5</span><span class="who">Sindre</span><span class="est" style="color:var(--blue-ink)">&asymp;08:45</span></div>
+          <div class="opp">kamp 5 av 13 · mot Wanvik Christoffer Thanapom (Jessheim)</div></div>
+        </a>
+      </div>
+      <div class="track" style="height:1080px">
+        <a class="ev none" data-who="hasti ingeborg" style="top:832.5px;min-height:133.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7888&amp;verid=1123" target="_blank" rel="noopener" title="Hasti Seerwan Mohammed, Ingeborg Ursin Haugrønning — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="hasti" style="top:33.8px;border-color:var(--blue)"></div>
+          <div class="mark" data-who="ingeborg" style="top:50.6px;border-color:var(--red)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Sparring · Dame pre-junior · 48–52 kg</div>
+          <div class="win">11:05–11:35 · pulje 1/1</div>
+          <div class="row" data-who="hasti"><div class="me"><span class="num" style="background:var(--blue)">3</span><span class="who">Hasti</span><span class="est" style="color:var(--blue-ink)">&asymp;11:13</span></div>
+          <div class="opp">kamp 3 av 8 · mot Tollefsen Annabelle (Drammen)</div></div>
+          <div class="row" data-who="ingeborg"><div class="me"><span class="num" style="background:var(--red)">4</span><span class="who">Ingeborg</span><span class="est" style="color:var(--red-ink)">&asymp;11:16</span></div>
+          <div class="opp">kamp 4 av 8 · mot Jensen Ronja Heggelund (Melhus)</div></div>
+        </a>
+      </div>
+      <div class="track" style="height:1080px">
+        <div class="brk" style="top:1035.0px;height:45.0px"><span>Lunsj</span></div>
+        <a class="ev blue" data-who="hakonb kaleo" style="top:270.0px;min-height:223.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7876&amp;verid=1123" target="_blank" rel="noopener" title="Håkon August Bruun, Kaleo Leander Brændeland Fürstenberg — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="hakonb" style="top:0.0px;border-color:var(--blue)"></div>
+          <div class="mark" data-who="kaleo" style="top:51.9px;border-color:var(--blue)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Sparring · Herre pre-junior · 60–65 kg</div>
+          <div class="win">09:00–09:50 · pulje 1/1</div>
+          <div class="row" data-who="hakonb"><div class="me"><span class="num" style="background:var(--blue)">1</span><span class="who">Håkon B.</span><span class="est" style="color:var(--blue-ink)">&asymp;09:00</span></div>
+          <div class="opp">kamp 1 av 13 · mot Varpe Anton (Stavanger)</div></div>
+          <div class="row" data-who="kaleo"><div class="me"><span class="num" style="background:var(--blue)">4</span><span class="who">Kaleo</span><span class="est" style="color:var(--blue-ink)">&asymp;09:12</span></div>
+          <div class="opp">kamp 4 av 13 · mot Sledzki Wojciech (Bergen)</div></div>
+        </a>
+        <a class="ev blue" data-who="hanna" style="top:517.5px;min-height:335.5px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7891&amp;verid=1123" target="_blank" rel="noopener" title="Hanna Wulff Myklebust — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="hanna" style="top:84.4px;border-color:var(--blue)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Sparring · Dame pre-junior · +60 kg</div>
+          <div class="win">09:55–11:10 · pulje 1/1</div>
+          <div class="row" data-who="hanna"><div class="me"><span class="num" style="background:var(--blue)">6</span><span class="who">Hanna</span><span class="est" style="color:var(--blue-ink)">&asymp;10:14</span></div>
+          <div class="opp">kamp 6 av 20 · mot vinner av Ytternes Ella Sienna (Oslo Øst) / Hansen Ella Bratterud (Tromsø)</div></div>
+        </a>
+        <a class="ev blue" data-who="adam" style="top:877.5px;min-height:133.0px" href="https://www.sportdata.org/kampsport/set-online/popup_auslosung_main.php?popup_action=auslosungcat_check&amp;catid=7875&amp;verid=1123" target="_blank" rel="noopener" title="Adam Campbell-Enoksen — åpne trekningen">
+          <span class="go" aria-hidden="true">&#8599;</span>
+          <div class="mark" data-who="adam" style="top:50.6px;border-color:var(--blue)"></div>
+          <div class="cat"><span class="lv lm">LM</span>Sparring · Herre pre-junior · 55–60 kg</div>
+          <div class="win">11:15–11:45 · pulje 1/1</div>
+          <div class="row" data-who="adam"><div class="me"><span class="num" style="background:var(--blue)">4</span><span class="who">Adam</span><span class="est" style="color:var(--blue-ink)">&asymp;11:26</span></div>
+          <div class="opp">kamp 4 av 8 · mot Sundsbak-Berg Karl (Askøy)</div></div>
+        </a>
+      </div>
+    </div></div>
+  </section>
+  <footer>
+    <p><b>Tallet i boksen er kampnummeret</b> &mdash; plassen i puljens rekkefølge, første runde ovenfra og ned, så andre runde. Det er forskjellen på å gå først og å vente en time, så den stiplede linjen viser hvor det havner: puljens tidsvindu delt på antall kamper, regnet fra toppen.</p>
+    <p><b>Bruk tiden som en pekepinn, ikke et oppmøtetidspunkt.</b> Den forutsetter at ringen holder skjema og rekkefølge; walkover trekker det fram, lange kamper skyver det bak. Kampnummeret er eksakt. Står det &laquo;mot vinner av&raquo;, sitter utøveren over første runde.</p>
+    <p><b>Fargen</b> er hjørnet i første kamp: øverste plass i paret er rød, nederste blå, og en seier gir ny farge i neste runde. Finaler som går i en annen ring står i tidslinjen på kortet.</p>
+    <p>Laget fra Fana TKD-utskriften fra sportdata (tidsplan og trekninger, 30. oktober 2026). Trekningen kan endres.</p>
+  </footer>
+</div>
+
+<script>
+  (function(){
+    var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+    var evs = Array.prototype.slice.call(document.querySelectorAll('.ev'));
+    function apply(who){
+      evs.forEach(function(e){
+        var list = (e.getAttribute('data-who') || '').split(' ');
+        var hit = who === 'all' || list.indexOf(who) !== -1;
+        e.classList.toggle('dim', !hit);
+        e.classList.toggle('part', hit && who !== 'all' && list.length > 1);
+        Array.prototype.forEach.call(e.querySelectorAll('.row,.mark'), function(r){
+          r.classList.toggle('off', who !== 'all' && r.getAttribute('data-who') !== who);
+        });
+      });
+      chips.forEach(function(c){
+        c.setAttribute('aria-pressed', String(c.getAttribute('data-who') === who));
+      });
+    }
+    chips.forEach(function(c){
+      c.addEventListener('click', function(){ apply(c.getAttribute('data-who')); });
+    });
+  })();
+</script>
+<script id="buildcheck">(function(){var B="2bc01333c7";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("fana26reload")===m[1])return;sessionStorage.setItem("fana26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
+</body>
+</html>
