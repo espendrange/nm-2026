@@ -335,23 +335,6 @@ button,.ring,.blk,input[type=range]{touch-action:manipulation}
 .urow .un img,.urow .un .noimg{width:30px;height:30px;border-radius:50%;object-fit:cover;flex:none;background:var(--sunken);display:block}
 .urow .seg3 button{padding:6px 2px;font-size:.74rem}
 @media (max-width:420px){.urow{grid-template-columns:1fr}}
-.ucount{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.ucount div{background:var(--surface);border-radius:8px;padding:10px;display:grid;justify-items:center}
-.ucount b{font-family:var(--display);font-weight:800;font-size:1.8rem;line-height:1}
-.ucount span{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--ink-3)}
-.uh{gap:8px}
-.uh b{flex:1}
-.padd{width:34px;height:34px;border-radius:50%;border:0;background:var(--brand);color:#fff;font-size:1.3rem;font-weight:700;line-height:1;cursor:pointer;flex:none}
-.padd.on{background:var(--ink-3)}
-.unpick{width:32px;height:32px;border-radius:50%;border:1px solid var(--rule);background:none;color:var(--ink-2);font-size:1.2rem;line-height:1;cursor:pointer;justify-self:end}
-.urow{grid-template-columns:minmax(0,1fr) auto}
-.picker{display:grid;gap:6px;padding:10px 12px;background:var(--sunken)}
-.pickn{display:flex;align-items:center;gap:8px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;font:inherit;font-size:.88rem;font-weight:600;text-align:left;cursor:pointer}
-.pickn.ute{opacity:.45}
-.pickn img,.pickn .noimg{width:28px;height:28px;border-radius:50%;object-fit:cover;background:var(--ground);display:block;flex:none}
-.pickform{display:flex;gap:6px}
-.pickform input{flex:1;min-width:0;font:inherit;padding:7px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--surface);color:var(--ink)}
-.pickform button{font:inherit;font-weight:700;padding:7px 12px;border-radius:8px;border:0;background:var(--brand);color:#fff;cursor:pointer}
 .h2h{background:var(--surface);border-radius:8px;overflow:hidden}
 .h2h .hh{display:flex;justify-content:space-between;gap:8px;align-items:baseline;padding:9px 12px;border-bottom:1px solid var(--rule-soft)}
 .h2h .hh b{font-size:.88rem}
@@ -371,6 +354,28 @@ button,.ring,.blk,input[type=range]{touch-action:manipulation}
 .opp li span{font-size:.74rem;color:var(--ink-3)}
 .res{flex:none;width:20px;height:20px;border-radius:4px;display:grid;place-items:center;font-style:normal;font-size:.7rem;font-weight:800;color:#fff;background:var(--ink-3)}
 .res.w{background:#2E9E4F}.res.l{background:#E5484D}
+.uttak{gap:0;background:var(--surface);border-radius:8px;padding:6px 14px 14px}
+.uttak .selnote{background:none;padding:6px 0;color:var(--ink-3)}
+.ucount{margin:6px 0 2px;font-size:.92rem;color:var(--ink-2)}
+.ucount b{color:var(--ink);font-variant-numeric:tabular-nums}
+.livedot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#2E9E4F;vertical-align:1px;margin-left:4px}
+.uttak .ug{font-family:var(--mono);font-weight:600;font-size:.7rem;letter-spacing:.12em;color:var(--ink-3);margin:18px 0 0}
+.uttak .ucat{background:none;border:0;border-radius:0;border-bottom:1px solid var(--rule-soft);padding:8px 0}
+.uttak .uh{display:flex;align-items:baseline;gap:8px;padding:0;border:0}
+.uttak .uh b{flex:1;font-family:var(--body);font-weight:600;font-size:.86rem;font-stretch:normal;color:var(--ink-2)}
+.uttak .uh .cnt{font-family:var(--mono);font-size:.78rem;color:var(--ink-3)}
+.padd{border:0;background:none;color:var(--brand);font:inherit;font-size:.82rem;font-weight:600;padding:2px 0;cursor:pointer}
+.uttak .urow{display:flex;align-items:center;gap:8px;padding:5px 0 0;border:0}
+.uttak .urow .un{flex:1;font-size:.95rem;font-weight:600;gap:8px}
+.uttak .urow .un img,.uttak .urow .un .noimg{width:22px;height:22px}
+.unpick{border:0;background:none;color:var(--ink-3);font-size:1.1rem;line-height:1;padding:2px 4px;cursor:pointer}
+.picker{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 2px}
+.pickn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--rule);background:none;color:var(--ink);border-radius:999px;padding:3px 10px 3px 3px;font:inherit;font-size:.84rem;cursor:pointer}
+.pickn.ute{opacity:.4}
+.pickn img,.pickn .noimg{width:22px;height:22px;border-radius:50%;object-fit:cover;background:var(--sunken);display:block;flex:none}
+.pickform{display:flex;gap:6px;width:100%;margin-top:2px}
+.pickform input{flex:1;min-width:0;font:inherit;font-size:.86rem;padding:6px 2px;border:0;border-bottom:1px solid var(--rule);background:none;color:var(--ink)}
+.pickform button{border:0;background:none;color:var(--brand);font:inherit;font-size:.84rem;font-weight:600;cursor:pointer}
 .blk.sel{outline:3px solid var(--brand);outline-offset:0;z-index:2}
 .nowline{position:absolute;left:var(--tc);right:0;height:0;border-top:2px solid #FF6A5E;z-index:3;pointer-events:none}
 .belt.red{background:#C62828}
@@ -852,16 +857,16 @@ function renderUttak(){
   const el = $('uttak');
   const status = !SEL_DB ? '<p class="selnote">Ikke koblet til delt lagring ennå. Valgene lagres bare på denne enheten.</p>'
     : !SEL.ok ? `<div class="selnote">${codeForm()}</div>`
-    : `<p class="selnote ${SEL.live ? 'on' : ''}">${SEL.live ? '● Delt live' : 'Kobler til …'}${SEL.err ? ' · ' + esc(SEL.err) : ''}</p>`;
+    : SEL.err || !SEL.live ? `<p class="selnote">${SEL.err ? esc(SEL.err) : 'Kobler til …'}</p>` : '';
   let h = status;
   if (SEL.ok) {
-    h += `<div class="ucount"><div><b>${pickedIn('SENIOR').size}</b><span>SR</span></div><div><b>${pickedIn('JUNIOR').size}</b><span>JR</span></div><div><b>${pickedIn('').size}</b><span>Totalt</span></div></div>`;
+    h += `<p class="ucount">SR <b>${pickedIn('SENIOR').size}</b> · JR <b>${pickedIn('JUNIOR').size}</b> · Totalt <b>${pickedIn('').size}</b>${SEL.live ? ' <i class="livedot" title="Delt live"></i>' : ''}</p>`;
     const groups = S.grp === 'JR' ? ['JUNIOR'] : S.grp === 'SR' ? ['SENIOR'] : ['SENIOR', 'JUNIOR'];
     for (const g of groups) {
       h += `<h2 class="ug">${g}</h2>`;
       for (const c of CATS.filter(c => c.g === g)) {
         const ps = picked(c), open = S.pick === c.k;
-        h += `<section class="ucat ${c.kind}"><div class="uh"><b>${esc(catLabel(c))}</b><span class="cnt">${ps.length || ''}</span><button type="button" class="padd${open ? ' on' : ''}" data-pick="${esc(c.k)}" aria-label="Velg utøver i ${esc(catLabel(c))}">${open ? '–' : '+'}</button></div>`
+        h += `<section class="ucat ${c.kind}"><div class="uh"><b>${esc(catLabel(c))}</b><span class="cnt">${ps.length || ''}</span><button type="button" class="padd" data-pick="${esc(c.k)}" aria-label="Legg til i ${esc(catLabel(c))}">${open ? 'lukk' : '+ legg til'}</button></div>`
           + ps.map(n => `<div class="urow"><span class="un">${PHOTOS[n] ? `<img src="${PHOTOS[n]}" alt="" loading="lazy">` : '<i class="noimg"></i>'}${esc(n)}</span><button type="button" class="unpick" data-unk="${esc(c.k)}" data-unn="${esc(n)}" aria-label="Fjern ${esc(n)}">×</button></div>`).join('');
         if (open) {
           const rest = c.x.filter(n => !ps.includes(n));
@@ -908,5 +913,5 @@ setInterval(tick, 30000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 </script>
 
-<script id="buildcheck">(function(){var B="3e5fc40410";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
+<script id="buildcheck">(function(){var B="e2e3e9d5b8";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
 </html>
