@@ -594,7 +594,7 @@ function renderPanel(){
   // faces next to names so the coaches can tell who is who on the mat
   const photoHtml = `<div class="pgrid">${ppl.map(({c, s}) => {
       const parts = c.n.split(' '), ini = (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
-      return `<figure class="pcard ${c.age || 's'}${selCls(c.n)}" data-n="${esc(c.n)}" role="button" tabindex="0">${PHOTOS[c.n] ? `<img src="${PHOTOS[c.n]}" alt="${esc(c.n)}" loading="lazy">` : `<span class="ini">${ini}</span>`}<figcaption>${s.bout ? `<b class="bn ${s.cor}">${s.bout}</b>` : ''}<span class="pnm">${selMark(c.n)}${esc(c.n)}</span><span class="pclub">${esc(c.c || '')}</span></figcaption></figure>`;
+      return `<figure class="pcard ${c.age || 's'}${selCls(c.n, kindOf(b.t))}" data-n="${esc(c.n)}" role="button" tabindex="0">${PHOTOS[c.n] ? `<img src="${PHOTOS[c.n]}" alt="${esc(c.n)}" loading="lazy">` : `<span class="ini">${ini}</span>`}<figcaption>${s.bout ? `<b class="bn ${s.cor}">${s.bout}</b>` : ''}<span class="pnm">${selMark(c.n, kindOf(b.t))}${esc(c.n)}</span><span class="pclub">${esc(c.c || '')}</span></figcaption></figure>`;
     }).join('')}</div>`;
   p.innerHTML = `<div class="ovh">${link}${pool}${sh.length && !showPhotos ? `<button type="button" class="zoom">${S.fit?'Zoom inn':'Hele arket'}</button>` : ''}</div>
     <div class="fabs">${prof ? '<button type="button" class="fab2" id="pback">‹ Tilbake</button>' : hasPhotos ? `<button type="button" class="fab2" id="pv">${showPhotos ? 'Ark' : 'Bilder'}</button>` : ''}<button type="button" class="x fab" aria-label="Tilbake til oversikten">×</button></div>
@@ -626,13 +626,13 @@ const DAY0 = 510, PPM = 2.4; // minutes from 08:30, pixels per minute
 // a split class has one sheet per ring, so take the start that belongs to this ring
 const startIn = (c, b) => c.st.find(x => x.cat===b.cat && (x.ring==null || x.ring===b.r));
 // someone the coaches have ruled out no longer takes up room in the overview
-const people = b => who(b).filter(c => selOverall(c.n) !== 'ute').map(c => ({c, s: startIn(c, b) || {}}))
+const people = b => { const k = kindOf(b.t); return who(b).filter(c => selFor(c.n, k) !== 'ute').map(c => ({c, s: startIn(c, b) || {}, k}))
   .sort((p, q) => (p.s.bout || 999) - (q.s.bout || 999) || (p.s.cor === 'r' ? -1 : 1))
-  .map(({c, s}) => {
+  .map(({c, s, k}) => {
     const p = c.n.split(' ');
     const no = s.bout ? `<b class="bn ${s.cor}">${s.bout}</b>` : '';
-    return `<span class="pn${c.age ? ' '+c.age : ''}${selCls(c.n)}">${no}${selMark(c.n)}${esc(p[0])} ${esc(p[p.length-1][0])}.</span>`;
-  }).join('');
+    return `<span class="pn${c.age ? ' '+c.age : ''}${selCls(c.n, k)}">${no}${selMark(c.n, k)}${esc(p[0])} ${esc(p[p.length-1][0])}.</span>`;
+  }).join(''); };
 function renderDay(){
   const dv = $('day'), list = blocks.filter(b => b.d===S.day);
   const end = Math.max(...list.map(b => b.e)) + 10;
@@ -753,14 +753,25 @@ const SEL = {s: {}, key: null, code: '', ok: false, err: '', live: false, raw: {
 const selKey = (k, n) => k + '|' + n;
 const selGet = (k, n) => SEL.s[selKey(k, n)] || 'aktuell';
 const selCount = c => picked(c).length;
-function selOverall(n){
+// status follows the discipline: ruling someone out in a pattern category does not touch their sparring.
+// Disciplines they compete in at NM without a selection category get their own Ute/Aktuell switch (key "-|<kind>").
+const KIND = {mo: 'monster', sp: 'sparring', st: 'spes', kn: 'knusing'};
+const KLAB = {monster: 'Mønster', sparring: 'Sparring', spes: 'Spesialteknikk', knusing: 'Knusing'};
+const catTitle = {}; for (const b of blocks) if (b.cat) catTitle[b.cat] = b.t;
+const kindOf = t => KIND[info(t || '').k];
+const kindsAtNM = n => { const c = DATA.cands.find(x => x.n === n); return c ? [...new Set(c.st.map(x => kindOf(catTitle[x.cat])))] : []; };
+function selFor(n, kind){
   if (!SEL.ok) return '';
-  const cs = catsOf(n); if (!cs.length) return '';
-  const v = cs.map(c => selGet(c.k, n));
-  return v.includes('uttatt') ? 'uttatt' : v.every(x => x === 'ute') ? 'ute' : '';
+  const cs = catsOf(n).filter(c => !kind || c.kind === kind);
+  if (cs.length) {
+    const v = cs.map(c => selGet(c.k, n));
+    return v.includes('uttatt') ? 'uttatt' : v.every(x => x === 'ute') ? 'ute' : '';
+  }
+  return kind && selGet('-|' + kind, n) === 'ute' ? 'ute' : '';
 }
-const selMark = n => selOverall(n) === 'uttatt' ? '<i class="okm" title="Tatt ut">✓</i>' : '';
-const selCls = n => { const o = selOverall(n); return o ? ' sel-' + o : ''; };
+const selOverall = n => selFor(n);
+const selMark = (n, kind) => selFor(n, kind) === 'uttatt' ? '<i class="okm" title="Tatt ut">✓</i>' : '';
+const selCls = (n, kind) => { const o = selFor(n, kind); return o ? ' sel-' + o : ''; };
 const catLabel = c => `${c.t.replace(/ sr | jr /, ' ')} · ${c.n}`;
 
 const te = new TextEncoder(), td = new TextDecoder();
@@ -840,11 +851,19 @@ async function selSet(k, n, v){
 }
 
 const codeForm = () => `<p class="hint">Uttaket vises bare når siden er åpnet med trenerlenken.${SEL.err ? ` <b class="over">${esc(SEL.err)}</b>` : ''}</p>`;
-const seg3 = (k, n) => { const v = selGet(k, n); return `<div class="seg3">${[['ute','Ute'],['aktuell','Aktuell'],['uttatt','Tatt ut']].map(([val, lab]) => `<button type="button" data-selk="${esc(k)}" data-seln="${esc(n)}" data-selv="${val}" aria-pressed="${v === val}">${lab}</button>`).join('')}</div>`; };
+const seg3 = (k, n, opts = [['ute','Ute'],['aktuell','Aktuell'],['uttatt','Tatt ut']]) => { const v = selGet(k, n); return `<div class="seg3" style="grid-template-columns:repeat(${opts.length},1fr)">${opts.map(([val, lab]) => `<button type="button" data-selk="${esc(k)}" data-seln="${esc(n)}" data-selv="${val}" aria-pressed="${v === val}">${lab}</button>`).join('')}</div>`; };
 function selProfile(n){
-  const cs = catsOf(n); if (!cs.length) return '';
+  const cs = catsOf(n), order = ['monster', 'sparring', 'spes', 'knusing'];
+  const kinds = order.filter(k => cs.some(c => c.kind === k) || kindsAtNM(n).includes(k));
+  if (!kinds.length) return '';
   if (!SEL.ok) return `<div class="selbox"><h3 class="mh">Uttak</h3>${codeForm()}</div>`;
-  return `<div class="selbox"><h3 class="mh">Uttak</h3>${cs.map(c => { const k = selCount(c); return `<div class="selrow"><div class="sl"><b>${esc(catLabel(c))}</b><span>Tatt ut: ${k}</span></div>${seg3(c.k, n)}</div>`; }).join('')}</div>`;
+  let h = '<div class="selbox"><h3 class="mh">Uttak</h3>';
+  for (const k of kinds) {
+    const kc = cs.filter(c => c.kind === k);
+    if (kc.length) h += kc.map(c => `<div class="selrow"><div class="sl"><b>${esc(catLabel(c))}</b><span>Tatt ut: ${selCount(c)}</span></div>${seg3(c.k, n)}</div>`).join('');
+    else h += `<div class="selrow"><div class="sl"><b>${KLAB[k]}</b><span>ikke på uttakslisten</span></div>${seg3('-|' + k, n, [['ute','Ute'],['aktuell','Aktuell']])}</div>`;
+  }
+  return h + '</div>';
 }
 // everyone picked in a category, including free-text names that are not on our candidate list
 function picked(c){
@@ -870,7 +889,7 @@ function renderUttak(){
           + ps.map(n => `<div class="urow"><span class="un">${PHOTOS[n] ? `<img src="${PHOTOS[n]}" alt="" loading="lazy">` : '<i class="noimg"></i>'}${esc(n)}</span><button type="button" class="unpick" data-unk="${esc(c.k)}" data-unn="${esc(n)}" aria-label="Fjern ${esc(n)}">×</button></div>`).join('');
         if (open) {
           const rest = c.x.filter(n => !ps.includes(n));
-          h += `<div class="picker">${rest.map(n => `<button type="button" class="pickn${selOverall(n) === 'ute' ? ' ute' : ''}" data-addk="${esc(c.k)}" data-addn="${esc(n)}">${PHOTOS[n] ? `<img src="${PHOTOS[n]}" alt="" loading="lazy">` : '<i class="noimg"></i>'}${esc(n)}</button>`).join('')}
+          h += `<div class="picker">${rest.map(n => `<button type="button" class="pickn${selGet(c.k, n) === 'ute' ? ' ute' : ''}" data-addk="${esc(c.k)}" data-addn="${esc(n)}">${PHOTOS[n] ? `<img src="${PHOTOS[n]}" alt="" loading="lazy">` : '<i class="noimg"></i>'}${esc(n)}</button>`).join('')}
             <form class="pickform" data-k="${esc(c.k)}"><input name="n" placeholder="Annet navn …" aria-label="Annet navn" autocomplete="off"><button type="submit">Legg til</button></form></div>`;
         }
         h += `</section>`;
@@ -913,5 +932,5 @@ setInterval(tick, 30000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 </script>
 
-<script id="buildcheck">(function(){var B="e2e3e9d5b8";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
+<script id="buildcheck">(function(){var B="c9233f365e";fetch(location.pathname+"?b="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(h){var m=h.match(/var B="([0-9a-f]+)"/);if(m&&m[1]!==B){try{if(sessionStorage.getItem("nm26reload")===m[1])return;sessionStorage.setItem("nm26reload",m[1])}catch(e){}location.replace(location.pathname+"?b="+m[1])}}).catch(function(){})})();</script>
 </html>
